@@ -6,7 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export default function PostDetail() {
-  const { id } = useParams(); // 여기서 id를 바로 얻는다.
+  // const { id } = useParams(); // 여기서 id를 바로 얻는다.
+  const { id } = useParams() as { id: string }; // ✅ 타입 단언
   const [post, setPost] = useState<any>(null);
 
   useEffect(() => {

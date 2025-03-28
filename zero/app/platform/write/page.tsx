@@ -124,7 +124,7 @@ export default function WritePost() {
         initialEditType="markdown"
         useCommandShortcut={true}
         hooks={{
-          addImageBlobHook: async (blob, callback) => {
+          addImageBlobHook: async (blob: Blob, callback: (url: string, alt: string) => void) => {
             const formData = new FormData();
             formData.append("thumbnail", blob);
 

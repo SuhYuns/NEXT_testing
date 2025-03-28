@@ -6,7 +6,8 @@ import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 
 export default function EditPostPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useParams() as { id: string }; // ✅ 타입 단언
   const router = useRouter();
   const editorRef = useRef<any>(null);
   const [thumbnail, setThumbnail] = useState("");
@@ -104,7 +105,7 @@ export default function EditPostPage() {
         initialEditType="markdown"
         useCommandShortcut={true}
         hooks={{
-          addImageBlobHook: async (blob, callback) => {
+          addImageBlobHook: async (blob: Blob, callback: (url: string, alt: string) => void) => {
             const formData = new FormData();
             formData.append("thumbnail", blob);
 
