@@ -2,18 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
+import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function EditPostPage() {
-  // const { id } = useParams();
-  const { id } = useParams() as { id: string }; // ✅ 타입 단언
+  const { id } = useParams() as { id: string };
   const router = useRouter();
-  const editorRef = useRef<any>(null);
   const [thumbnail, setThumbnail] = useState("");
   const [title, setTitle] = useState("");
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     if (!id) return;
@@ -22,10 +24,8 @@ export default function EditPostPage() {
       .then((data) => {
         setThumbnail(data.thumbnail);
         setTitle(data.title);
-        setTimeout(() => {
-          editorRef.current?.getInstance().setMarkdown(data.content || "");
-          setLoading(false);
-        }, 0);
+        setContent(data.content || "");
+        setLoading(false);
       });
   }, [id]);
 
@@ -53,7 +53,6 @@ export default function EditPostPage() {
   };
 
   const handleUpdate = async () => {
-    const content = editorRef.current?.getInstance().getMarkdown();
     const response = await fetch("/api/posts/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -77,7 +76,6 @@ export default function EditPostPage() {
       <p className="text-4xl font-bold mt-10">{title}</p> <hr />
 
       <h3 className="font-bold mb-2 text-xl">Thumbnail</h3>
-      
       {uploading && <p className="text-gray-500">업로드 중...</p>}
 
       <p className="font-bold">Current Thumbnail</p>
@@ -98,32 +96,10 @@ export default function EditPostPage() {
       />
 
       <h3 className="font-bold mb-2 text-xl">Content</h3>
-      <Editor
-        ref={editorRef}
-        previewStyle="vertical"
-        height="500px"
-        initialEditType="markdown"
-        useCommandShortcut={true}
-        hooks={{
-          addImageBlobHook: async (blob: Blob, callback: (url: string, alt: string) => void) => {
-            const formData = new FormData();
-            formData.append("thumbnail", blob);
-
-            const response = await fetch("/api/posts/upload", {
-              method: "POST",
-              body: formData,
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-              const imageUrl = `/thumbnail/${data.filePath.split("/")[2]}`;
-              callback(imageUrl, "업로드된 이미지");
-            } else {
-              alert("이미지 업로드 실패: " + data.error);
-            }
-          },
-        }}
+      <MDEditor
+        value={content}
+        onChange={(val) => setContent(val || "")}
+        height={500}
       />
 
       <button

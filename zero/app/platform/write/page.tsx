@@ -1,8 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
+import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function WritePost() {
   const editorRef = useRef<any>(null);
@@ -11,6 +14,7 @@ export default function WritePost() {
   const [topics, setTopics] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [content, setContent] = useState("");
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -36,8 +40,6 @@ export default function WritePost() {
   };
 
   const handleSubmit = async () => {
-    const content = editorRef.current?.getInstance().getMarkdown();
-
     if (!title || !category || !topics || !content) {
       alert("모든 필드를 입력하세요.");
       return;
@@ -117,32 +119,10 @@ export default function WritePost() {
       )}
 
       <h3 className="font-bold mb-2">Content</h3>
-      <Editor
-        ref={editorRef}
-        previewStyle="vertical"
-        height="500px"
-        initialEditType="markdown"
-        useCommandShortcut={true}
-        hooks={{
-          addImageBlobHook: async (blob: Blob, callback: (url: string, alt: string) => void) => {
-            const formData = new FormData();
-            formData.append("thumbnail", blob);
-
-            const response = await fetch("/api/posts/upload", {
-              method: "POST",
-              body: formData,
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-              const imageUrl = `/thumbnail/${data.filePath.split("/")[2]}`;
-              callback(imageUrl, "업로드된 이미지");
-            } else {
-              alert("이미지 업로드 실패: " + data.error);
-            }
-          },
-        }}
+      <MDEditor
+        value={content}
+        onChange={(val) => setContent(val || "")}
+        height={500}
       />
 
       <button
