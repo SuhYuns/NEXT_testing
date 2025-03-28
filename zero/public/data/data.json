@@ -1,0 +1,186 @@
+[
+    {
+        "name": "미리캔버스",
+        "url": "https://www.miricanvas.com/",
+        "purpose": "디자인 제작 도구",
+        "id": "admin@nextgroup.or.kr",
+        "password": "nextgroup0901"
+    },
+    {
+        "name": "에디티지",
+        "url": "https://www.editage.co.kr/",
+        "purpose": "논문 교정 및 번역 서비스",
+        "id": "kylee@nextgroup.or.kr",
+        "password": "Net01131$"
+    },
+    {
+        "name": "월간수소경제",
+        "url": "https://h2news.kr/",
+        "purpose": "수소경제 전문 매체",
+        "id": "thanos",
+        "password": "sprtmxmtnth"
+    },
+    {
+        "name": "인스타",
+        "url": "https://www.instagram.com/",
+        "purpose": "인스타그램",
+        "id": "media@nextgroup.or.kr",
+        "password": "next230616"
+    },
+    {
+        "name": "클립아트코리아",
+        "url": "https://www.clipartkorea.co.kr",
+        "purpose": "이미지 정보",
+        "id": "NEXTGroup001",
+        "password": "nextgroup0901"
+    },
+    {
+        "name": "팀뷰어",
+        "url": "https://www.teamviewer.com/ko/?utm_source=google&utm_medium=cpc&utm_campaign=kr%7Cb%7Cpr%7C23%7Cdec%7Ctv-core-brand-only-exact-sn%7Cnew%7Ct0%7C0&utm_content=Exact&utm_term=%ED%8C%80%EB%B7%B0%EC%96%B4&gad_source=1&gclid=Cj0KCQiA3sq6BhD2ARIsAJ8MRwXN7R0wffYS-e8ZGrgXX8rp3I3GoWkonnUsMKcViCWefF9FysqB8l4aAvBOEALw_wcB&coupon=CMP-PR-BF24",
+        "purpose": "화면 공유 서비스",
+        "id": "nextgroup002@gmail.com",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "팟빵",
+        "url": "https://www.podbbang.com/",
+        "purpose": "팟캐스트 스트리밍",
+        "id": "tojinsu@nextgroup.or.kr",
+        "password": "Nextgroup0901!"
+    },
+    {
+        "name": "한경닷컴",
+        "url": "https://www.hankyung.com/esg/guide",
+        "purpose": "한국경제 뉴스 포털",
+        "id": "admin@nextgroup.or.kr",
+        "password": "nextesg123"
+    },
+    {
+        "name": "한국무역협회",
+        "url": "https://www.kita.net/",
+        "purpose": "(무역업고유번호: 10290644)",
+        "id": "TC10290644",
+        "password": "NEXTGroup0901!"
+    },
+    {
+        "name": "CDP.net",
+        "url": "https://www.cdp.net/en/",
+        "purpose": "기업 지속 가능성 평가",
+        "id": "rachel.eun.ko@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "datacamp",
+        "url": "https://www.datacamp.com/",
+        "purpose": "데이터 과학 교육",
+        "id": "nextgroup@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "deepl",
+        "url": "https://www.deepl.com/ko/pro?utm_term=deepl&utm_campaign=KO%7CSearch%7CC%7CBrand%7CKorean%7CExact&utm_source=google&utm_medium=paid&hsa_acc=1083354268&hsa_cam=20838049608&hsa_grp=156042610226&hsa_ad=683813589325&hsa_src=g&hsa_tgt=kwd-370669574285&hsa_kw=deepl&hsa_mt=e&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=Cj0KCQiA3sq6BhD2ARIsAJ8MRwVs0z-omfSVo01rzdbu_4Qtq5j50lWTUfNWLVD-cdjMpBajJSEXVugaAseoEALw_wcB",
+        "purpose": "AI 번역 서비스",
+        "id": "deepl@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "fNGuide",
+        "url": "https://www.fnguide.com/",
+        "purpose": "금융·투자 정보",
+        "id": "nextgroup",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "GAIA",
+        "url": "https://www.gaia.go.kr/usr/join_4th.do",
+        "purpose": "범부처 연구비통합관리시스템",
+        "id": "nextgroup01",
+        "password": "next0901!"
+    },
+    {
+        "name": "Grammarly",
+        "url": "https://www.grammarly.com/",
+        "purpose": "문법 검사·교정 도구",
+        "id": "thanos@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "IEA",
+        "url": "https://www.iea.org/",
+        "purpose": "국제 에너지 기구",
+        "id": "thanos@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "IRIS",
+        "url": "https://www.iris.go.kr/main.do",
+        "purpose": "글로벌 연구 정보 시스템",
+        "id": "NEXTGROUP",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "iStock",
+        "url": "https://www.istockphoto.com/kr",
+        "purpose": "유료 스톡 이미지 사이트",
+        "id": "kylee@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "linkedin learning",
+        "url": "https://www.linkedin.com/learning/",
+        "purpose": "온라인 직무 교육",
+        "id": "thanos@nextgroup.or.kr",
+        "password": "sprtmxmfjsldE22"
+    },
+    {
+        "name": "Statista",
+        "url": "https://www.statista.com/",
+        "purpose": "통계 및 데이터 분석",
+        "id": "rachel.eun.ko@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "Tableau",
+        "url": "https://www.tableau.com/ko-kr",
+        "purpose": "데이터 시각화 툴",
+        "id": "nextdatabase@nextgroup.or.kr",
+        "password": "sprtmxmDB22!"
+    },
+    {
+        "name": "vrew",
+        "url": "https://vrew.ai/ko/",
+        "purpose": "유튜브 영어 자막 자동생성/편집기",
+        "id": "media@nextgroup.or.kr",
+        "password": "findthenext1"
+    },
+    {
+        "name": "zoom",
+        "url": "https://zoom.us/signin#/login",
+        "purpose": "화상 회의 플랫폼",
+        "id": "nextgroup@nextgroup.or.kr",
+        "password": "NEXTGroup0901-"
+    },
+    {
+        "name": "Agora pulse",
+        "url": "https://www.agorapulse.com/",
+        "purpose": "소셜 미디어 관리",
+        "id": "jisuyi@nextgroup.or.kr",
+        "password": "Commsnext123"
+    },
+    {
+        "name": "네이버",
+        "url": "https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/",
+        "purpose": "네이버",
+        "id": "nextgroup1",
+        "password": "NEXTGroup0901-"
+    },
+
+
+    {
+        "name": "사무실 WIFI",
+        "url": "https://www.google.com",
+        "purpose": "사무실 WIFI",
+        "id": "NEXTgroup",
+        "password": "next0901"
+    }
+]
