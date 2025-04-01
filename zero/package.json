@@ -10,7 +10,7 @@
     "generate-types": "npx supabase gen types typescript --project-id mkgpxawmsyiucaitvdgf --schema public > types_db.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
+    "@supabase/supabase-js": "^2.49.4",
     "@uiw/react-md-editor": "^4.0.5",
     "formidable": "^3.5.2",
     "framer-motion": "^12.4.11",
