@@ -18,7 +18,7 @@ export default function UserInfo() {
         setUser(user);
       } else {
         // 로그인 안 되어 있으면 login 페이지로 이동
-        router.push('/login');
+        router.push('/int/login');
       }
 
       
@@ -30,7 +30,7 @@ export default function UserInfo() {
   // 로그아웃 처리
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push('/login'); // 로그아웃 후 로그인 페이지로 이동
+    router.push('/int/login'); // 로그아웃 후 로그인 페이지로 이동
   };
 
   return (

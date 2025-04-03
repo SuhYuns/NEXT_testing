@@ -35,7 +35,7 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-4 border rounded">
-      <h1 className="text-2xl mt-10 mb-10 text-center">Login</h1>
+      <h1 className="text-2xl mt-10 mb-10 text-center font-bold">Login</h1>
       <form onSubmit={handleLogin}>
         <input
           type="email"
