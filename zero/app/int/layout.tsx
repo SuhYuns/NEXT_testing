@@ -3,19 +3,22 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
+import UserInfo from '@/component/UserInfo';
+import { supabase } from '@/lib/supabase';
 
 // ✅ 메뉴 데이터 (각 메뉴마다 다른 세부 항목을 설정 가능)
 const menuData: { [key: string]: string[] } = {
-  "정보": ["내 정보", "공용 계정", "좌석 배정", "가이드라인"],
+  "정보": ["내 정보", "공용 계정", "좌석 정보", "가이드라인"],
   "커뮤니티": ["공지사항", "정보 공유", "동호회 게시판", "건의사항"],
   "기능": ["워크 플로우", "출퇴근 관리", "초대장"],
   "관리": ["자산관리", "계정관리", "멤버관리"],
-  "사단법인 넥스트": ["홈페이지", "플랫폼"],
+  "사단법인 넥스트": ["홈페이지", "제로바 블로그"],
 };
 
 const menuLinks: { [key: string]: string } = {
-    "공용 계정": "/test/info/account",
-    "가이드라인": "/guidelines",
+    "공용 계정": "int/info/account",
+    "가이드라인": "/info/guideline",
+    "좌석 정보": "int/info/desk",
     "UI/UX 디자인": "/ui-ux-design",
     "회원가입": "/signup",
     "결제 방법": "/payment",
@@ -24,7 +27,7 @@ const menuLinks: { [key: string]: string } = {
     "이메일 문의": "/contact",
     "FAQ": "/faq",
     "홈페이지": "https://nextgroup.or.kr/",
-    "플랫폼": "../../platform",
+    "제로바 블로그": "../../platform",
   };
 
 // ✅ 개별 메뉴 아이템 컴포넌트
@@ -34,12 +37,14 @@ const MenuItem = ({
   isMobile,
   openDropdown,
   setOpenDropdown,
+  user,
 }: {
   title: string;
   subItems: string[];
   isMobile: boolean;
   openDropdown: string | null;
   setOpenDropdown: (menu: string | null) => void;
+  user: any;
 }) => {
   const toggleDropdown = () => {
     setOpenDropdown(openDropdown === title ? null : title);
@@ -65,15 +70,26 @@ const MenuItem = ({
               isMobile ? "relative right-0 mt-2 w-full" : "right-0 mt-2 w-48"
             }`}
           >
-            {subItems.map((sub, index) => (
-              <a
-                key={index}
-                href={menuLinks[sub] || "#"}
-                className="block px-4 py-2 hover:bg-gray-100 font-light text-base"
-              >
-                {sub}
-              </a>
-            ))}
+            {subItems.map((sub, index) => {
+              const link = menuLinks[sub];
+              const clickable = user && link;  // user가 있고 메뉴 링크가 있을 때만 클릭 가능
+              return clickable ? (
+                <a
+                  key={index}
+                  href={link}
+                  className="block px-4 py-2 hover:bg-gray-100 font-light text-base"
+                >
+                  {sub}
+                </a>
+              ) : (
+                <span
+                  key={index}
+                  className="block px-4 py-2 font-light text-base text-gray-400 cursor-not-allowed"
+                >
+                  {sub}
+                </span>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>
@@ -84,6 +100,7 @@ const MenuItem = ({
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -95,6 +112,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  // 로그인 상태 가져오기
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
   }, []);
 
   return (
@@ -117,6 +141,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               isMobile={false}
               openDropdown={openDropdown}
               setOpenDropdown={setOpenDropdown}
+              user={user}
             />
           ))}
         </div>
@@ -157,6 +182,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   isMobile={true}
                   openDropdown={openDropdown}
                   setOpenDropdown={setOpenDropdown}
+                  user={user}
                 />
               ))}
             </nav>
@@ -164,6 +190,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <UserInfo /> {/* 로그인 정보 */}
 
       {/* 본문 (동적으로 변경) */}
         <main className="p-6">
