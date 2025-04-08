@@ -10,6 +10,7 @@
     "generate-types": "npx supabase gen types typescript --project-id mkgpxawmsyiucaitvdgf --schema public > types_db.ts"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.6",
     "@supabase/supabase-js": "^2.49.4",
     "@uiw/react-md-editor": "^4.0.5",
     "formidable": "^3.5.2",
