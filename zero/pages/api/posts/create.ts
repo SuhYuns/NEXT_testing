@@ -1,22 +1,4 @@
-// import { NextApiRequest, NextApiResponse } from 'next';
-// import { supabase } from '../../../lib/supabase';
 
-// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-//     if (req.method === 'POST') {
-//         const { title, topics, category, thumbnail, content } = req.body;
-
-//         const { data, error } = await supabase.from('posts').insert([
-//             { title, topics, category, thumbnail, content }
-//         ]);
-
-//         if (error) return res.status(500).json({ error: error.message });
-
-//         res.status(201).json(data);
-//     } else {
-//         res.setHeader('Allow', ['POST']);
-//         res.status(405).end(`Method ${req.method} Not Allowed`);
-//     }
-// }
 
 
 import { NextApiRequest, NextApiResponse } from 'next';
