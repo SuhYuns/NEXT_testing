@@ -5,15 +5,15 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 interface Profile {
-  id: string;
-  name: string;
-  department: string;
-  position: string;
-  code: string;
-  ismanager: boolean;
-  isinit: boolean;
-  isused: boolean;
-  created_at: string;
+  id: string | null;
+  name: string | null;
+  department: string | null;
+  position: string | null;
+  code: string | null;
+  ismanager: boolean | null;
+  isinit: boolean | null;
+  isused: boolean | null;
+  created_at: string | null;
 }
 
 export default function UserInfo() {

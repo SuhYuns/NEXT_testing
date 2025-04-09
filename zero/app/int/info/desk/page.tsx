@@ -35,7 +35,10 @@ function getDistanceFromLatLonInMeters(
 
 
 interface Profile {
-  name: string;
+  id?: string;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
+  name: string;       // 사용자 이름
+  department?: string;
+  position?: string;
 }
 
 interface Seat {
