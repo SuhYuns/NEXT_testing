@@ -54,7 +54,7 @@ interface Asset {
     id: string;
     asset_name: string;
     start_date: string;
-    // asset_type: string;
+    state: string;
     // created_at: string;
   }
 
@@ -210,7 +210,7 @@ export default function DeskPage() {
               onClick={() => {
                 if (!isEmpty) handleSeatClick(seat);
               }}
-              className={`${baseClasses} ${bgClass} h-20 justify-items-center` }
+              className={`${baseClasses} ${bgClass} h-20 justify-items-center ${isEmpty && 'border-white h-0'}`}
             >
               {!isEmpty && <div className="text-sm hidden md:block md:text-base">{seat.seat_number}</div>}
               {!isEmpty && <div className="text-sm sm:block md:hidden md:text-base">{seat.seat_number.slice(2)}</div>}
@@ -247,7 +247,7 @@ export default function DeskPage() {
               <ul>
               {assetDetails.length > 0 ? assetDetails.map((a, i) => 
                 <span key={a.asset_name}>
-                    <li key={i}><span>{a.asset_name}</span> (구매일 : <span>{a.start_date}</span>)</li>
+                    <li key={i}><span>{a.asset_name}</span> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
                 </span>
               ) : '없음'}
               </ul>
@@ -265,12 +265,12 @@ export default function DeskPage() {
                     예약하기
                 </button>
 
-                <button
+                {/* <button
                     onClick={() => {}}
                     className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white'
                 >
                     희망좌석 지정
-                </button>
+                </button> */}
             </div>
           </div>
         ) : (
