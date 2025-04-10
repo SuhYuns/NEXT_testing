@@ -64,6 +64,8 @@ export default function UserInfo() {
     };
   }, [router]);
 
+
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -78,6 +80,11 @@ export default function UserInfo() {
       </div>
     );
   }
+
+  // if (profile.isinit === true) {
+  //   router.push('/int/login/change');
+  //   return null; // 혹은 로딩 스피너 등을 표시
+  // }
 
   return (
     <div className="flex items-center justify-end p-3 pr-10 bg-white shadow">
