@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { span } from 'framer-motion/client';
 
 // 현재 위치 판별
 
@@ -36,7 +35,7 @@ function getDistanceFromLatLonInMeters(
 
 interface Profile {
   id?: string;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
-  name: string;       // 사용자 이름
+  name: string | null;       // 사용자 이름
   department?: string;
   position?: string;
 }
@@ -45,13 +44,10 @@ interface Seat {
   id: string;
   seat_number: string;
   floor: string;
-  occupant: string | null; // null이면 비어있음
   equipment: string[];
-  applicants: string[];
   created_at: string;
   arrange: number;
-  // profiles?: Profile[]; // 조인 결과, occupant와 연결된 profiles 데이터 (하나의 객체가 들어있는 배열)
-  profiles?: Profile;
+  profiles?: Profile[];
 }
 
 interface Asset {
@@ -103,28 +99,30 @@ export default function DeskPage() {
     const fetchSeats = async () => {
       const { data, error } = await supabase
         .from('seats')
-        .select('*, profiles!seats_occupant_fkey1(name, department, position)')
+        .select('*, profiles!profiles_current_seat_fkey(name, department, position)')
         .eq('floor', activeFloor);
+  
       if (error) {
         console.error('좌석 데이터 가져오기 에러:', error.message);
       } else if (data) {
+        console.log('Fetched seats:', JSON.stringify(data, null, 2)); // JSON 문자열화하여 가독성 높임
         setSeats(data as Seat[]);
       }
     };
-
     fetchSeats();
-    // 탭 전환 시 기존 선택 좌석 초기화
     setSelectedSeat(null);
   }, [activeFloor]);
+  
 
-  // 선택된 좌석의 equipment 배열에 있는 자산 정보를 가져오기
+
+  // 장비 정보 가져오기
   useEffect(() => {
     const fetchAssets = async () => {
-      if (selectedSeat && selectedSeat.equipment && selectedSeat.equipment.length > 0) {
+      if (selectedSeat && selectedSeat.id) {
         const { data, error } = await supabase
           .from('assets')
           .select('*')
-          .in('id', selectedSeat.equipment);
+          .eq('seat_user', selectedSeat.id);
         if (error) {
           console.error('자산 데이터 가져오기 에러:', error.message);
           setAssetDetails([]);
@@ -135,9 +133,10 @@ export default function DeskPage() {
         setAssetDetails([]);
       }
     };
-
+  
     fetchAssets();
   }, [selectedSeat]);
+  
 
   // 좌석 클릭 시, 이미 선택된 좌석이면 해제, 아니면 선택하여 상세정보 표시
   const handleSeatClick = (seat: Seat) => {
@@ -189,12 +188,12 @@ export default function DeskPage() {
     </div>
 
       {/* 좌석 정보 그리드 */}
-      <div className="grid grid-cols-6 gap-4 mb-6">
+      <div className="grid grid-cols-6 gap-4 mb-6 ">
         {seats.slice() // state를 직접 변형하지 않도록 배열 복사
           .sort((a, b) => b.arrange - a.arrange) // arrange 값이 낮은 순서대로 정렬
           .map((seat) => {
           // 좌석이 사용 중이면 occupant가 null이 아니므로, profiles에 이름이 있어야 함.
-          const isOccupied = seat.occupant !== null;
+          const isOccupied = seat.profiles && seat.profiles.length > 0;
           const isSelected = selectedSeat && selectedSeat.id === seat.id;
           const baseClasses = "border border-gray-300 p-4 text-center font-bold";
           const isEmpty = seat.seat_number.toLowerCase() === 'empty';
@@ -204,18 +203,20 @@ export default function DeskPage() {
             : isSelected
             ? "bg-green-100"
             : "hover:bg-gray-100";
+
           return (
             <button
               key={seat.id}
               onClick={() => {
                 if (!isEmpty) handleSeatClick(seat);
               }}
-              className={`${baseClasses} ${bgClass}`}
+              className={`${baseClasses} ${bgClass} h-20 justify-items-center` }
             >
-              {!isEmpty && <div className="text-sm md:text-base">{seat.seat_number}</div>}
+              {!isEmpty && <div className="text-sm hidden md:block md:text-base">{seat.seat_number}</div>}
+              {!isEmpty && <div className="text-sm sm:block md:hidden md:text-base">{seat.seat_number.slice(2)}</div>}
               {isOccupied && seat.profiles && (
                 <div className="text-xs text-gray-700 hidden md:block font-normal">  
-                {seat.profiles.name}
+                {seat.profiles[0].name}
                 </div>
               )}
             </button>
@@ -231,18 +232,30 @@ export default function DeskPage() {
               {selectedSeat.seat_number} 좌석 정보
             </h2>
             <p className="mb-2">
-              사용자:{" "}
-              {selectedSeat.occupant && selectedSeat.profiles && selectedSeat.profiles.name
-                ?  <>{selectedSeat.profiles.name} <span className='font-bold text-red-500'>(사용 중인 좌석입니다)</span></>
-                : '없음'}
+              <span className="font-bold">사용자:</span>
+              {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
+                <>
+                  {selectedSeat.profiles[0].name}
+                  <span className="font-bold text-red-500"> (사용 중인 좌석입니다)</span>
+                </>
+              ) : (
+                '없음'
+              )}
             </p>
-            <p className="mb-2">
-              {/* 장비: {assetDetails.length > 0 ? assetDetails.map((a) => <div>{a.asset_name}</div>).join(', ') : '없음'} */}
-              장비: {assetDetails.length > 0 ? assetDetails.map((a) => <span key={a.asset_name}><span>{a.asset_name}</span> (구매일 : <span>{a.start_date}</span>)</span>) : '없음'}
-            </p>
-            <p className="mb-2">
+            <div className="mb-2">
+              <span className='font-bold'>장비:</span> <br />
+              <ul>
+              {assetDetails.length > 0 ? assetDetails.map((a, i) => 
+                <span key={a.asset_name}>
+                    <li key={i}><span>{a.asset_name}</span> (구매일 : <span>{a.start_date}</span>)</li>
+                </span>
+              ) : '없음'}
+              </ul>
+            </div>
+
+            {/* <p className="mb-2">
               희망자: {selectedSeat.applicants.length > 0 ? selectedSeat.applicants : '없음'}
-            </p>
+            </p> */}
 
             <div className='mt-10 align-right flex justify-end'>
                 <button
