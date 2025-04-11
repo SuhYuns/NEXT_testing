@@ -2,17 +2,48 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import Alert from '@/component/Alert';
+
+interface Profile {
+  id?: string;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
+  name: string | null;       // 사용자 이름
+  department?: string;
+  position?: string;
+  current_seat?: string;
+}
+
+interface Seat {
+  id: string;
+  seat_number: string;
+  floor: string;
+  equipment: string[];
+  created_at: string;
+  arrange: number;
+  profiles?: Profile[];
+}
+
+interface Asset {
+    id: string;
+    asset_name: string;
+    start_date: string;
+    state: string;
+    // created_at: string;
+}
+
+// interface Me {
+//   current_seat: string | null;
+// }
+
+
 
 // 현재 위치 판별
-
-
 // 본사 위치
 const targetLocation = {
   lat: 37.50804407288159,
   lng: 127.03538105605207
 };
 
-// Haversine 공식 (두 좌표 사이의 거리를 미터 단위로 계산)
+// 두 좌표 사이의 거리를 미터 단위로 계산(Haversine 공식)
 function getDistanceFromLatLonInMeters(
   lat1: number, lon1: number, lat2: number, lon2: number
 ): number {
@@ -33,67 +64,81 @@ function getDistanceFromLatLonInMeters(
 // ..............................................................
 
 
-interface Profile {
-  id?: string;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
-  name: string | null;       // 사용자 이름
-  department?: string;
-  position?: string;
-}
-
-interface Seat {
-  id: string;
-  seat_number: string;
-  floor: string;
-  equipment: string[];
-  created_at: string;
-  arrange: number;
-  profiles?: Profile[];
-}
-
-interface Asset {
-    id: string;
-    asset_name: string;
-    start_date: string;
-    state: string;
-    // created_at: string;
-  }
 
 export default function DeskPage() {
-  // 현재 활성화된 층: '8' 또는 '9'
-  const [activeFloor, setActiveFloor] = useState<'8' | '9'>('8');
-  // 해당 층의 좌석 목록
-  const [seats, setSeats] = useState<Seat[]>([]);
-  // 선택된 좌석 (클릭 시 상세 정보 토글)
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
-  const [assetDetails, setAssetDetails] = useState<Asset[]>([]);
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState([""]);
+
+  const openAlert = () => {
+    setShowAlert(true);
+  };
+  const closeAlert = () => {
+    setShowAlert(false);
+  };
 
   // 위치 추척 관련 
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-      if (!navigator.geolocation) {
-        setError('이 브라우저는 Geolocation을 지원하지 않습니다.');
-        return;
-      }
-      // 현재 위치 가져오기
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude, accuracy } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-          // 특정 위치(targetLocation)와의 거리 계산
-          const dist = getDistanceFromLatLonInMeters(latitude, longitude, targetLocation.lat, targetLocation.lng);
-          setDistance(dist);
-        },
-        (err) => {
-          setError(err.message);
-        }
-      );
-    }, []);
-  // ....
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
+
+  const fetchProfile = async (user: any) => {
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+    if (profileError) {
+      console.error('프로필 가져오기 에러:', profileError.message);
+    } else {
+      setProfile(profileData as Profile);
+    }
+  };
+
+  useEffect(() => {
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUser(user);
+        fetchProfile(user);
+      }
+    });
+    
+    if (!navigator.geolocation) {
+      setError('이 브라우저는 Geolocation을 지원하지 않습니다.');
+      return;
+    }
+    // 현재 위치 가져오기
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        const dist = getDistanceFromLatLonInMeters(latitude, longitude, targetLocation.lat, targetLocation.lng);
+        setDistance(dist);
+      },
+      (err) => {
+        setError(err.message);
+      }
+    );
+
+
+
+  }, []);
+
+
+  // 현재 활성화된 층과 해당 층의 좌석 목록
+  const [activeFloor, setActiveFloor] = useState<'8' | '9'>('8');
+  const [seats, setSeats] = useState<Seat[]>([]);
+
+  // 선택된 좌석 (클릭 시 상세 정보 토글)
+  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+  const [assetDetails, setAssetDetails] = useState<Asset[]>([]);
+
+  
   // 활성화된 층에 따라 Supabase에서 좌석 데이터를 불러옴 (profiles 조인 포함)
   useEffect(() => {
     const fetchSeats = async () => {
@@ -113,7 +158,6 @@ export default function DeskPage() {
     setSelectedSeat(null);
   }, [activeFloor]);
   
-
 
   // 장비 정보 가져오기
   useEffect(() => {
@@ -146,6 +190,39 @@ export default function DeskPage() {
       setSelectedSeat(seat);
     }
   };
+
+  // 좌석 예약 로직
+  async function handleReserve() {
+
+
+    if (!selectedSeat) return;
+    // 위치/좌석 여부 등 조건만족 체크
+    const seatId = selectedSeat.id;
+    if (!userLocation || distance! > 500) {
+      setMessage(["본사 반경 내에서만 예약 가능합니다", "본사에 근접한 상태에서 예약해 주세요", "확인"])
+      openAlert();
+      return;
+    }
+    try {
+      const response = await fetch('/api/seats/reserve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          seatId,
+          userLat: userLocation.lat,
+          userLng: userLocation.lng,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        alert(`예약 실패: ${result.error}`);
+        return;
+      }
+      alert(`좌석 예약 완료! 만료 시각: ${result.until}`);
+    } catch (err) {
+      console.error('예약 오류:', err);
+    }
+  }
 
   return (
     <div className="p-6">
@@ -217,6 +294,7 @@ export default function DeskPage() {
               {isOccupied && seat.profiles && (
                 <div className="text-xs text-gray-700 hidden md:block font-normal">  
                 {seat.profiles[0].name}
+                {profile?.current_seat == seat.id && <div className='font-bold'>나의 좌석</div>}
                 </div>
               )}
             </button>
@@ -228,49 +306,60 @@ export default function DeskPage() {
       <div className="shadow p-6 rounded">
         {selectedSeat ? (
           <div>
-            <h2 className="text-xl font-bold mb-2 ">
-              {selectedSeat.seat_number} 좌석 정보
-            </h2>
-            <p className="mb-2">
-              <span className="font-bold">사용자:</span>
-              {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
-                <>
-                  {selectedSeat.profiles[0].name}
-                  <span className="font-bold text-red-500"> (사용 중인 좌석입니다)</span>
-                </>
-              ) : (
-                '없음'
-              )}
-            </p>
-            <div className="mb-2">
-              <span className='font-bold'>장비:</span> <br />
-              <ul>
-              {assetDetails.length > 0 ? assetDetails.map((a, i) => 
-                <span key={a.asset_name}>
-                    <li key={i}><span>{a.asset_name}</span> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
-                </span>
-              ) : '없음'}
-              </ul>
+            <div>
+              <h2 className="text-xl font-bold mb-2 ">
+                {selectedSeat.seat_number} 좌석 정보
+              </h2>
+              <p className="mb-2">
+                <span className="font-bold">사용자:</span>
+                {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
+                  <>
+                    {selectedSeat.profiles[0].name}
+                    <span className="font-bold text-red-500"> (사용 중인 좌석입니다)</span>
+                  </>
+                ) : (
+                  '없음'
+                )}
+              </p>
+              <div className="mb-2">
+                <span className='font-bold'>장비:</span> <br />
+                <ul>
+                {assetDetails.length > 0 ? assetDetails.map((a, i) =>
+                  <span key={a.asset_name}>
+                      <li key={i}><span>{a.asset_name}</span> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
+                  </span>
+                ) : '없음'}
+                </ul>
+              </div>
             </div>
 
-            {/* <p className="mb-2">
-              희망자: {selectedSeat.applicants.length > 0 ? selectedSeat.applicants : '없음'}
-            </p> */}
+            <Alert
+              isOpen={showAlert}
+              onClose={closeAlert}
+              icon={<span className="text-3xl">🔔</span>} // 원하는 아이콘을 JSX로 전달
+              message={[message[0], message[1], message[2]]}
+            />
 
             <div className='mt-10 align-right flex justify-end'>
                 <button
-                    onClick={() => {}}
+                    onClick={() => {
+                      if (selectedSeat.profiles && selectedSeat.profiles.length > 0) {
+                        setMessage(["사용 중인 좌석입니다", "다른 좌석을 선택해 주세요", "확인"])
+                        openAlert();
+                      } 
+                      if (profile?.current_seat) {
+                        setMessage(["이미 사용 중인 좌석이 있습니다.", "자신의 좌석을 사용해 주세요", "확인"])
+                        // alert(profile.current_seat)
+                        openAlert();
+                      }
+                      if (!selectedSeat.profiles && !profile?.current_seat) {
+                        handleReserve();
+                      }
+                    }}
                     className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white mr-2'
                 >
                     예약하기
                 </button>
-
-                {/* <button
-                    onClick={() => {}}
-                    className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white'
-                >
-                    희망좌석 지정
-                </button> */}
             </div>
           </div>
         ) : (
