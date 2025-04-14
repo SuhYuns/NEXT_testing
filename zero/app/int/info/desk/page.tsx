@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import Alert from '@/component/Alert';
+import AssetInfo from '@/component/AssetInfo';
+import ProfileInfo from '@/component/ProfileInfo';
 
 interface Profile {
-  id?: string;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
+  id?: string | null;        // 프로필 테이블의 PK (조인 결과에 포함 가능)
   name: string | null;       // 사용자 이름
   department?: string;
   position?: string;
@@ -77,6 +79,33 @@ export default function DeskPage() {
     setShowAlert(false);
   };
 
+  const [showAssetModal, setShowAssetModal] = useState(false);
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+
+  const handleOpenAsset = (id: string) => {
+    setSelectedAssetId(id);
+    setShowAssetModal(true);
+  };
+
+  const handleCloseAsset = () => {
+    setShowAssetModal(false);
+    setSelectedAssetId(null);
+  };
+
+
+  const [showProfile, setShowProfile] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  const handleOpenProfile = (uid: string) => {
+    setSelectedUserId(uid);
+    setShowProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setSelectedUserId(null);
+    setShowProfile(false);
+  };
+
   // 위치 추척 관련 
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
@@ -144,7 +173,7 @@ export default function DeskPage() {
     const fetchSeats = async () => {
       const { data, error } = await supabase
         .from('seats')
-        .select('*, profiles!profiles_current_seat_fkey(name, department, position)')
+        .select('*, profiles!profiles_current_seat_fkey(id, name, department, position)')
         .eq('floor', activeFloor);
   
       if (error) {
@@ -312,9 +341,26 @@ export default function DeskPage() {
               </h2>
               <p className="mb-2">
                 <span className="font-bold">사용자:</span>
+                
                 {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
                   <>
-                    {selectedSeat.profiles[0].name}
+                    {showProfile && selectedUserId && (
+                      <ProfileInfo userId={selectedUserId} onClose={handleCloseProfile} />
+                    )}
+                    <a
+                      onClick={() => {
+                        const profileId = selectedSeat.profiles?.[0].id;
+                        console.log(profileId);
+                        if (profileId) {
+                          handleOpenProfile(profileId);
+                        } else {
+                          alert("사용자 정보가 올바르지 않습니다.");
+                        }
+                      }}
+                      className="cursor-pointer underline"
+                    >
+                      {selectedSeat.profiles[0].name}
+                    </a>
                     <span className="font-bold text-red-500"> (사용 중인 좌석입니다)</span>
                   </>
                 ) : (
@@ -323,10 +369,13 @@ export default function DeskPage() {
               </p>
               <div className="mb-2">
                 <span className='font-bold'>장비:</span> <br />
+                {showAssetModal && selectedAssetId && (
+                  <AssetInfo assetId={selectedAssetId} onClose={handleCloseAsset} />
+                )}
                 <ul>
                 {assetDetails.length > 0 ? assetDetails.map((a, i) =>
                   <span key={a.asset_name}>
-                      <li key={i}><span>{a.asset_name}</span> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
+                      <li key={i}><a onClick={() => { handleOpenAsset(a.id) }}><span>{a.asset_name}</span></a> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
                   </span>
                 ) : '없음'}
                 </ul>
