@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 // ✅ JSON 데이터 인터페이스
 interface Site {

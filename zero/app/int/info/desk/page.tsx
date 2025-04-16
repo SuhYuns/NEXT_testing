@@ -339,14 +339,15 @@ export default function DeskPage() {
               <h2 className="text-xl font-bold mb-2 ">
                 {selectedSeat.seat_number} 좌석 정보
               </h2>
+              {/* {selectedSeat.id} */}
               <p className="mb-2">
                 <span className="font-bold">사용자:</span>
-                
-                {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
-                  <>
-                    {showProfile && selectedUserId && (
+                {showProfile && selectedUserId && (
                       <ProfileInfo userId={selectedUserId} onClose={handleCloseProfile} />
                     )}
+                {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
+                  <>
+                    
                     <a
                       onClick={() => {
                         const profileId = selectedSeat.profiles?.[0].id;
@@ -357,7 +358,7 @@ export default function DeskPage() {
                           alert("사용자 정보가 올바르지 않습니다.");
                         }
                       }}
-                      className="cursor-pointer underline"
+                      className="cursor-pointer hover:text-gray-500"
                     >
                       {selectedSeat.profiles[0].name}
                     </a>
@@ -375,7 +376,7 @@ export default function DeskPage() {
                 <ul>
                 {assetDetails.length > 0 ? assetDetails.map((a, i) =>
                   <span key={a.asset_name}>
-                      <li key={i}><a onClick={() => { handleOpenAsset(a.id) }}><span>{a.asset_name}</span></a> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
+                      <li key={i} className='cursor-pointer hover:text-gray-500'><a onClick={() => { handleOpenAsset(a.id) }}><span>{a.asset_name}</span></a> (<span>{a.start_date} 구매 </span> {a.state ? "🟢" : "🔴"})</li>
                   </span>
                 ) : '없음'}
                 </ul>

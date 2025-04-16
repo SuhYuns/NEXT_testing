@@ -57,6 +57,7 @@ export default function AssetInfo({ assetId, onClose }: { assetId: string; onClo
     {asset ? (
       <>
         <p className="text-lg font-bold mb-5">{asset.asset_name}</p>
+        
         <img src="/img/noImage.png" alt="자산 이미지" className='mb-5' />
         <p>상태: {asset.state ? "사용중(🟢)" : "고장(🔴)"}</p>
         <p>최초 구매일: {asset.start_date}</p>

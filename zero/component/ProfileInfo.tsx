@@ -15,6 +15,10 @@ interface Profile {
   created_at: string | null;
   current_seat: string | null;
   currentSeatLimit: string | null;
+  seats?: {
+    seat_number: string;
+    currentSeatLimit: string;
+  } | null;
 }
 
 interface ProfileInfoProps {
@@ -33,14 +37,14 @@ export default function ProfileInfo({ userId, onClose }: ProfileInfoProps) {
     const fetchProfile = async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, seats:current_seat ( seat_number )')
         .eq('id', userId)
         .single();
       
       if (error) {
         console.error('프로필 조회 에러:', error.message);
       } else {
-        setProfile(data as Profile);
+        setProfile(data as unknown as Profile);
       }
       setLoading(false);
     };
@@ -74,7 +78,7 @@ export default function ProfileInfo({ userId, onClose }: ProfileInfoProps) {
               <p><strong>사번/코드:</strong> {profile.code}</p>
               <p><strong>부서:</strong> {profile.department}</p>
               <p><strong>직급:</strong> {profile.position}</p>
-              <p><strong>현재좌석:</strong> {profile.current_seat ?? '없음'}</p>
+              <p><strong>현재좌석:</strong> {profile.seats?.seat_number ?? '없음'} ({profile.seats?.currentSeatLimit ? "예약석" : "고정석"})</p>
               <p><strong>상태:</strong> {profile.isused ? '재직' : '퇴사'}</p>
             </div>
           </>
