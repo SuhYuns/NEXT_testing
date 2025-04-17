@@ -16,9 +16,9 @@ const menuData: { [key: string]: string[] } = {
 };
 
 const menuLinks: { [key: string]: string } = {
-    "공용 계정": "int/info/account",
+    "공용 계정": "/int/info/account",
     "가이드라인": "/info/guideline",
-    "좌석 정보": "int/info/desk",
+    "좌석 정보": "/int/info/desk",
     "UI/UX 디자인": "/ui-ux-design",
     "회원가입": "/signup",
     "결제 방법": "/payment",

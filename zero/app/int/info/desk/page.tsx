@@ -222,36 +222,53 @@ export default function DeskPage() {
 
   // 좌석 예약 로직
   async function handleReserve() {
-
-
-    if (!selectedSeat) return;
-    // 위치/좌석 여부 등 조건만족 체크
-    const seatId = selectedSeat.id;
-    if (!userLocation || distance! > 500) {
-      setMessage(["본사 반경 내에서만 예약 가능합니다", "본사에 근접한 상태에서 예약해 주세요", "확인"])
-      openAlert();
-      return;
-    }
+    if (!selectedSeat) return
+  
+    /* 1) 거리 제한 체크 */
+    // if (!userLocation || distance! > 500) {
+    //   setMessage([
+    //     '본사 반경 내에서만 예약 가능합니다',
+    //     '본사에 근접한 상태에서 예약해 주세요',
+    //     '확인',
+    //   ])
+    //   openAlert()
+    //   return
+    // }
+  
     try {
-      const response = await fetch('/api/seats/reserve', {
+      /* 2) API 호출 – 반드시 '/api/...' */
+      const res = await fetch('/api/seats/reserve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          seatId,
-          userLat: userLocation.lat,
-          userLng: userLocation.lng,
-        }),
+        credentials: 'include', // ✅ 필수!!!
+        body: JSON.stringify({ seatId: selectedSeat.id }),
       });
-      const result = await response.json();
-      if (!response.ok) {
-        alert(`예약 실패: ${result.error}`);
-        return;
+  
+      const result = await res.json()
+  
+      if (!res.ok) {
+        setMessage(['예약 실패', result.error, '확인'])
+        openAlert()
+        return
       }
-      alert(`좌석 예약 완료! 만료 시각: ${result.until}`);
+  
+      /* 3) 성공 – 한국시간으로 만료 시각 표시 */
+      const untilKST = new Date(result.until).toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+      })
+      setMessage(['좌석 예약 완료!', `만료 시각: ${untilKST}`, '확인'])
+      openAlert()
+  
+      /* 4) 프론트 캐시에 바로 반영해 “나의 좌석” 표시 */
+      setProfile((p) => p && { ...p, current_seat: selectedSeat.id })
+  
     } catch (err) {
-      console.error('예약 오류:', err);
+      console.error('예약 오류:', err)
+      setMessage(['예약 오류', '알 수 없는 오류가 발생했습니다', '확인'])
+      openAlert()
     }
   }
+  
 
   return (
     <div className="p-6">
@@ -343,8 +360,8 @@ export default function DeskPage() {
               <p className="mb-2">
                 <span className="font-bold">사용자:</span>
                 {showProfile && selectedUserId && (
-                      <ProfileInfo userId={selectedUserId} onClose={handleCloseProfile} />
-                    )}
+                  <ProfileInfo userId={selectedUserId} onClose={handleCloseProfile} />
+                )}
                 {selectedSeat.profiles && selectedSeat.profiles.length > 0 ? (
                   <>
                     
@@ -396,14 +413,19 @@ export default function DeskPage() {
                       if (selectedSeat.profiles && selectedSeat.profiles.length > 0) {
                         setMessage(["사용 중인 좌석입니다", "다른 좌석을 선택해 주세요", "확인"])
                         openAlert();
+                        return
                       } 
                       if (profile?.current_seat) {
                         setMessage(["이미 사용 중인 좌석이 있습니다.", "자신의 좌석을 사용해 주세요", "확인"])
                         // alert(profile.current_seat)
                         openAlert();
+                        return
                       }
-                      if (!selectedSeat.profiles && !profile?.current_seat) {
-                        handleReserve();
+                      if (
+                        (!selectedSeat.profiles || selectedSeat.profiles.length === 0) &&
+                        !profile?.current_seat
+                      ) {
+                        handleReserve()
                       }
                     }}
                     className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white mr-2'

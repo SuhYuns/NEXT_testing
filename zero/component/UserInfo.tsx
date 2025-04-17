@@ -1,90 +1,111 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 interface Profile {
-  id: string | null;
-  name: string | null;
-  department: string | null;
-  position: string | null;
-  code: string | null;
-  ismanager: boolean | null;
-  isinit: boolean | null;
-  isused: boolean | null;
-  created_at: string | null;
+  id: string | null
+  name: string | null
+  department: string | null
+  position: string | null
+  code: string | null
+  ismanager: boolean | null
+  isinit: boolean | null
+  isused: boolean | null
+  created_at: string | null
 }
 
 export default function UserInfo() {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const router = useRouter();
+  const [user, setUser]   = useState<any>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
 
-  // 별도의 함수로 프로필 조회
+  const router    = useRouter()
+  const pathname  = usePathname()         // 현재 경로 확인용
+
+  /* ───────────────────────────────
+     프로필을 가져와서 isinit 검사
+  ─────────────────────────────── */
   const fetchProfile = async (user: any) => {
-    const { data: profileData, error: profileError } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
-      .single();
-    if (profileError) {
-      console.error('프로필 가져오기 에러:', profileError.message);
-    } else {
-      setProfile(profileData);
-    }
-  };
+      .single()
 
+    if (error) {
+      console.error('프로필 가져오기 에러:', error.message)
+      return
+    }
+
+    setProfile(data)
+
+    // 첫 로그인(비밀번호 초기화 단계)라면 즉시 이동
+    if (data?.isinit && pathname !== '/int/login/change') {
+      router.push('/int/login/change')
+    }
+  }
+
+  /* ───────────────────────────────
+     최초 실행 + onAuthStateChange
+  ─────────────────────────────── */
   useEffect(() => {
-    // 최초 유저 정보 확인
+    // 1) 첫 로드 시 현재 세션 확인
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
-        setUser(user);
-        fetchProfile(user);
+        setUser(user)
+        fetchProfile(user)
+      } else {
+        router.push('/int/login')
       }
-    });
+    })
 
-    // onAuthStateChange 이벤트 리스너 추가
-    const { data: authListener } = supabase.auth.onAuthStateChange(
+    // 2) 세션 변화 리스너
+    const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (session?.user) {
-          setUser(session.user);
-          fetchProfile(session.user);
+          setUser(session.user)
+          fetchProfile(session.user)
         } else {
-          setUser(null);
-          setProfile(null);
-          router.push('/int/login');
+          setUser(null)
+          setProfile(null)
+          router.push('/int/login')
         }
       }
-    );
+    )
 
-    // 클린업: 리스너 해제
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [router]);
+    return () => listener.subscription.unsubscribe()
+  }, [router, pathname])
 
+  /* ───────────────────────────────
+     profile이 나중에 갱신될 경우 대비 (안전망)
+  ─────────────────────────────── */
+  useEffect(() => {
+    if (profile?.isinit && pathname !== '/int/login/change') {
+      router.push('/int/login/change')
+    }
+  }, [profile, pathname, router])
 
-
+  /* ───────────────────────────────
+     로그아웃
+  ─────────────────────────────── */
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    router.push('/int/login');
-  };
+    await supabase.auth.signOut()
+    setUser(null)
+    setProfile(null)
+    router.push('/int/login')
+  }
 
+  /* ───────────────────────────────
+     렌더링
+  ─────────────────────────────── */
   if (!user || !profile) {
     return (
       <div className="flex items-center justify-end p-3 pr-10 bg-white shadow">
         <span className="mr-4">로그인이 필요합니다</span>
       </div>
-    );
+    )
   }
-
-  // if (profile.isinit === true) {
-  //   router.push('/int/login/change');
-  //   return null; // 혹은 로딩 스피너 등을 표시
-  // }
 
   return (
     <div className="flex items-center justify-end p-3 pr-10 bg-white shadow">
@@ -98,5 +119,5 @@ export default function UserInfo() {
         logout
       </button>
     </div>
-  );
+  )
 }
