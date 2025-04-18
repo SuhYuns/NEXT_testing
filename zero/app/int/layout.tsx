@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase';
 
 // ✅ 메뉴 데이터 (각 메뉴마다 다른 세부 항목을 설정 가능)
 const menuData: { [key: string]: string[] } = {
-  "정보": ["내 정보", "공용 계정", "좌석 정보", "가이드라인"],
+  "정보": ["내 정보", "공용 계정", "좌석 정보", "홈페이지 피드백", "가이드라인"],
   "커뮤니티": ["공지사항", "정보 공유", "동호회 게시판", "건의사항"],
   "기능": ["워크 플로우", "출퇴근 관리", "초대장"],
   "관리": ["자산관리", "계정관리", "멤버관리"],
@@ -17,15 +17,9 @@ const menuData: { [key: string]: string[] } = {
 
 const menuLinks: { [key: string]: string } = {
     "공용 계정": "/int/info/account",
-    "가이드라인": "/info/guideline",
+    "홈페이지 피드백": "/int/info/feedback",
     "좌석 정보": "/int/info/desk",
-    "UI/UX 디자인": "/ui-ux-design",
-    "회원가입": "/signup",
-    "결제 방법": "/payment",
-    "서비스 이용 팁": "/tips",
-    "고객센터": "/support",
-    "이메일 문의": "/contact",
-    "FAQ": "/faq",
+
     "홈페이지": "https://nextgroup.or.kr/",
     "제로바 블로그": "../../platform",
   };

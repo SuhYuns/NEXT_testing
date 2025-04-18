@@ -200,7 +200,7 @@ export default function DeskPage() {
           console.error('자산 데이터 가져오기 에러:', error.message);
           setAssetDetails([]);
         } else {
-          setAssetDetails(data as Asset[]);
+          setAssetDetails(data as unknown as Asset[]);
         }
       } else {
         setAssetDetails([]);
