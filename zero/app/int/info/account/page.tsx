@@ -13,12 +13,12 @@ interface Profile {
 interface Account {
   idx: string;
   name: string;
-  url: string;
-  description: string;
-  login_id: string;
-  login_pwd: string;
-  state: boolean;
-  recentChangeDate: string | null;
+  url: string | null;           // ← nullable 허용
+  description: string | null;   // ← nullable 허용
+  login_id: string | null;      // 필요하다면 nullable 허용
+  login_pwd: string | null;     // 필요하다면 nullable 허용
+  state: boolean | null;        // 필요하다면 nullable 허용
+  recentChangeDate: string | null; // 컬럼명도 정확히 일치시키세요
 }
 
 export default function AccountPage() {
@@ -189,7 +189,7 @@ export default function AccountPage() {
               <td className="border px-4 py-2">{ac.description}</td>
               <td className="px-4 py-2 border">{ac.login_id} 
                 <button
-                    onClick={() => copyToClipboard(ac.login_id)}
+                    onClick={() => copyToClipboard(ac.login_id ?? '')}
                     className="text-sm px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ml-2"
                 >
                     복사
@@ -197,7 +197,7 @@ export default function AccountPage() {
                 </td>
               <td className="px-4 py-2 border "><span className='blur-sm hover:blur-none'>{ac.login_pwd}</span>
               <button
-                    onClick={() => copyToClipboard(ac.login_pwd)}
+                    onClick={() => copyToClipboard(ac.login_pwd ?? '')}
                     className="text-sm px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ml-2"
                 >
                     복사
