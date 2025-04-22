@@ -9,76 +9,115 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function WritePost() {
   const editorRef = useRef<any>(null);
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [topics, setTopics] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [content, setContent] = useState("");
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const [uploadingThumb, setUploadingThumb] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-    const formData = new FormData();
-    formData.append("thumbnail", file);
-
-    setUploading(true);
-    const response = await fetch("/api/posts/upload", {
+  // 서버에 파일 업로드 → public URL 반환
+  const uploadToApi = async (file: File, folder: string): Promise<string> => {
+    const form = new FormData();
+    form.append("file", file);
+    const res = await fetch(`/api/uploadImage?folder=${folder}`, {
       method: "POST",
-      body: formData,
+      body: form,
     });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Upload failed");
+    return data.url;
+  };
 
-    const data = await response.json();
-    setUploading(false);
-
-    if (response.ok) {
-      setThumbnail(data.filePath.split("/")[2]);
-    } else {
-      alert("파일 업로드 실패: " + data.error);
+  // 썸네일 업로드
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingThumb(true);
+    try {
+      const url = await uploadToApi(file, "thumbnails");
+      setThumbnailUrl(url);
+    } catch (err: any) {
+      alert("썸네일 업로드 실패: " + err.message);
+    } finally {
+      setUploadingThumb(false);
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleContentImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const url = await uploadToApi(file, "content");
+      setContent((prev) => prev + `\n![이미지](${url})\n`);
+    } catch (err: any) {
+      alert("본문 이미지 업로드 실패: " + err.message);
+    } finally {
+      setUploadingImage(false);
+      e.target.value = "";
+    }
+  };
+
+
+  // 게시글 제출
   const handleSubmit = async () => {
     if (!title || !category || !topics || !content) {
       alert("모든 필드를 입력하세요.");
       return;
     }
-
-    const response = await fetch("/api/posts/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, category, topics, thumbnail, content }),
-    });
-
-    if (response.ok) {
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/posts/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          category,
+          topics,
+          thumbnailUrl,
+          content,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Create failed");
       alert("게시글이 작성되었습니다!");
       window.location.href = "/platform";
-    } else {
-      alert("게시글 작성에 실패했습니다.");
+    } catch (err: any) {
+      alert("게시글 작성에 실패했습니다: " + err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">WRITE</h1>
+      <h1 className="text-3xl font-bold mb-6">WRITE</h1>
 
-      <h3 className="font-bold">Title</h3>
-      {!title && <p className="text-red-400 text-sm">제목을 입력하세요</p>}
+      {/* Title */}
+      <label className="block mb-2 font-bold">Title</label>
       <input
         type="text"
-        placeholder="제목을 입력하세요"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
         className="w-full p-2 border rounded mb-4"
+        placeholder="제목을 입력하세요"
+        value={title ?? ""}
+        onChange={(e) => setTitle(e.target.value)}
       />
 
-      <h3 className="font-bold">Category</h3>
-      {!category && <p className="text-red-400 text-sm">카테고리를 선택하세요</p>}
+      {/* Category */}
+      <label className="block mb-2 font-bold">Category</label>
       <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
         className="w-full p-2 border rounded mb-4"
+        value={category ?? ""}
+        onChange={(e) => setCategory(e.target.value)}
       >
         <option value="">select category</option>
         <option value="zerobar original">zerobar original</option>
@@ -87,12 +126,12 @@ export default function WritePost() {
         <option value="others">others</option>
       </select>
 
-      <h3 className="font-bold">Topic</h3>
-      {!topics && <p className="text-red-400 text-sm">토픽을 선택하세요</p>}
+      {/* Topic */}
+      <label className="block mb-2 font-bold">Topic</label>
       <select
-        value={topics}
-        onChange={(e) => setTopics(e.target.value)}
         className="w-full p-2 border rounded mb-4"
+        value={topics ?? ""}
+        onChange={(e) => setTopics(e.target.value)}
       >
         <option value="">select topic</option>
         <option value="energy">energy</option>
@@ -101,35 +140,59 @@ export default function WritePost() {
         <option value="others">others</option>
       </select>
 
-      <h3 className="font-bold">Thumbnail</h3>
-      {!thumbnail && <p className="text-red-400 text-sm">썸네일을 첨부하세요</p>}
+      {/* Thumbnail */}
+      <label className="block mb-2 font-bold">Thumbnail</label>
       <input
         type="file"
         accept="image/*"
-        onChange={handleFileUpload}
-        className="w-full p-2 border rounded mb-4"
+        onChange={handleThumbnailUpload}
+        disabled={uploadingThumb}
+        className="w-full p-2 border rounded mb-2"
       />
-      {uploading && <p className="text-gray-500">업로드 중...</p>}
-      {thumbnail && (
+      {uploadingThumb && <p className="text-gray-500 mb-4">썸네일 업로드 중...</p>}
+      {thumbnailUrl && (
         <img
-          src={`/thumbnail/${thumbnail}`}
+          src={thumbnailUrl || `/thumbnail/${thumbnailUrl}`}
           alt="Thumbnail Preview"
-          className="w-full h-40 object-cover rounded-md mb-4"
+          className="w-full h-40 object-cover rounded mb-6"
         />
       )}
 
-      <h3 className="font-bold mb-2">Content</h3>
+      <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleContentImageUpload}
+          className="invisible"
+      />
+
+      <div className="flex justify-start mb-3">
+        <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingImage}
+            className="px-4 py-2 bg-gray-500 text-white rounded  hover:bg-gray-400 text-sm disabled:opacity-50"
+          >
+            {uploadingImage ? "업로드 중…" : "📷 본문 사진 업로드"}
+        </button>
+      </div>
+
+      {/* Markdown Editor */}
+      <label className="block mb-2 font-bold">Content</label>
       <MDEditor
+        ref={editorRef}
         value={content}
-        onChange={(val) => setContent(val || "")}
+        onChange={(v) => setContent(v || "")}
         height={500}
       />
 
+      {/* Submit */}
       <button
         onClick={handleSubmit}
-        className="w-full mt-6 bg-gray-500 text-white py-2 rounded font-bold hover:bg-gray-400"
+        disabled={submitting}
+        className="w-full mt-6 bg-gray-500 text-white py-3 rounded font-bold hover:bg-gray-400 disabled:opacity-50"
       >
-        UPLOAD
+        {submitting ? "저장 중..." : "UPLOAD"}
       </button>
     </div>
   );

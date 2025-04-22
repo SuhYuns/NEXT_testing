@@ -173,7 +173,7 @@ export default function BoardPage() {
                     {post.category} ｜ {post.topics}
                   </p>
                   <img
-                    src={`/thumbnail/${post.thumbnail}`}
+                    src={post.thumbnail || `/thumbnail/${post.thumbnail}`}
                     alt="Thumbnail"
                     className="w-full h-40 object-cover mb-2"
                   />
