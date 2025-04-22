@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../../lib/supabase'; // ✅ 기존 방식 유지!
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,24 +13,28 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      // 에러 메시지 가공
       if (error.message.includes('missing email or phone')) {
-        setError('⚠️ 이메일을 입력해주세요.'); // 🔁 여기서 커스터마이징
+        setError('⚠️ 이메일을 입력해주세요.');
       } else if (error.message.includes('Invalid login credentials')) {
         setError('⚠️ 아이디 또는 비밀번호가 올바르지 않습니다.');
       } else {
-        setError(error.message); // 기본 메시지도 fallback으로 제공
+        setError(error.message);
       }
       return;
     }
 
-    router.refresh(); 
+    if (data.session) {
+      const { access_token, refresh_token, expires_in } = data.session;
+
+      // ✅ Supabase가 필요로 하는 쿠키 설정
+      document.cookie = `sb-access-token=${access_token}; path=/; max-age=${expires_in}; SameSite=Lax; Secure`;
+      document.cookie = `sb-refresh-token=${refresh_token}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax; Secure`;
+    }
+
+    router.refresh();
     router.push('/int');
   };
 
@@ -57,7 +61,7 @@ export default function LoginPage() {
           로그인
         </button>
 
-        <p className='text-center mt-5 text-gray-500'>계정 생성은 IT 관리자에게 문의하세요</p>
+        <p className="text-center mt-5 text-gray-500">계정 생성은 IT 관리자에게 문의하세요</p>
       </form>
     </div>
   );

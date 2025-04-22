@@ -300,9 +300,13 @@ export default function DeskPage() {
         <div>
           <p>본사 위치에서의 거리: {distance.toFixed(2)} 미터 (내 위치 : {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)})</p>
           {distance <= 500 ? (
-            <p className="text-green-600 font-bold">500m 이내에 있습니다! <span>(예약 가능)</span></p>
+            <p className="text-green-600 font-bold">500m 이내에 있습니다! 
+            {/* <span>(예약 가능)</span> */}
+            </p>
           ) : (
-            <p className="text-gray-600">500m 범위를 벗어났습니다. <span className='text-red-600 font-bold'>(예약 불가)</span></p>
+            <p className="text-gray-600">500m 범위를 벗어났습니다. 
+            {/* <span className='text-red-600 font-bold'>(예약 불가)</span> */}
+            </p>
           )}
         </div>
       ) : (
@@ -407,31 +411,64 @@ export default function DeskPage() {
               message={[message[0], message[1], message[2]]}
             />
 
+            
+
             <div className='mt-10 align-right flex justify-end'>
-                <button
-                    onClick={() => {
-                      if (selectedSeat.profiles && selectedSeat.profiles.length > 0) {
-                        setMessage(["사용 중인 좌석입니다", "다른 좌석을 선택해 주세요", "확인"])
-                        openAlert();
-                        return
-                      } 
-                      if (profile?.current_seat) {
-                        setMessage(["이미 사용 중인 좌석이 있습니다.", "자신의 좌석을 사용해 주세요", "확인"])
-                        // alert(profile.current_seat)
-                        openAlert();
-                        return
+              { profile?.current_seat != selectedSeat.id &&
+              <button
+              onClick={() => {
+                if (selectedSeat.profiles && selectedSeat.profiles.length > 0) {
+                  setMessage(["사용 중인 좌석입니다", "다른 좌석을 선택해 주세요", "확인"])
+                  openAlert();
+                  return
+                } 
+                if (profile?.current_seat) {
+                  setMessage(["이미 사용 중인 좌석이 있습니다.", "자신의 좌석을 사용해 주세요", "확인"])
+                  // alert(profile.current_seat)
+                  openAlert();
+                  return
+                }
+                if (
+                  (!selectedSeat.profiles || selectedSeat.profiles.length === 0) &&
+                  !profile?.current_seat
+                ) {
+                  handleReserve()
+                  window.location.reload();
+                }
+              }}
+              className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white mr-2'
+          >
+              예약하기
+          </button>
+
+              }
+                
+                {profile?.current_seat == selectedSeat.id && 
+                  <button 
+                    className='px-4 py-2 rounded text-white mr-2 bg-red-500 hover:bg-red-600'
+                    onClick={async () => {
+                      if (!confirm('정말 예약을 취소하시겠습니까?')) return;
+                  
+                      const res = await fetch('/api/seats/cancel', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include', // 쿠키 필수
+                      });
+                  
+                      const result = await res.json();
+                  
+                      if (!res.ok) {
+                        alert(`예약 취소 실패: ${result.error}`);
+                        return;
                       }
-                      if (
-                        (!selectedSeat.profiles || selectedSeat.profiles.length === 0) &&
-                        !profile?.current_seat
-                      ) {
-                        handleReserve()
-                      }
+                  
+                      alert('예약이 취소되었습니다.');
+                      window.location.reload(); // 상태 반영 위해 리로드
                     }}
-                    className='px-4 py-2 rounded bg-[#59bd7b] hover:shadow text-white mr-2'
-                >
-                    예약하기
-                </button>
+                  >
+                    예약취소
+                  </button>
+                }
             </div>
           </div>
         ) : (
