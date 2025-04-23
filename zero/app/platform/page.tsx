@@ -94,10 +94,10 @@ export default function BoardPage() {
         */}
         <aside
           className={`
-            w-full md:w-1/4 p-4 transition-transform duration-300 
-            bg-gray-100 
+            w-full md:w-1/6 p-4 transition-transform duration-300  
             ${filtersOpen ? "block" : "hidden"}  /* 모바일에서 토글 */
             md:block                              /* 데스크톱에서는 항상 보임 */
+            
           `}
         >
           <h2 className="text-lg font-bold mb-4">Filters</h2>
@@ -109,7 +109,7 @@ export default function BoardPage() {
           ].map(({ label, items, state, setState }) => (
             <div key={label} className="mt-4">
               <h3 className="font-semibold">{label}</h3>
-              <ul className="space-y-2 mt-2 flex flex-wrap gap-4">
+              <ul className="">
                 {items.map((item) => (
                   <li key={item}>
                     <label className="flex items-center space-x-2">
@@ -118,8 +118,8 @@ export default function BoardPage() {
                         checked={state.includes(item)}
                         onChange={() => toggleSelection(setState, item)}
                         className="form-checkbox"
-                      />
-                      <span>{item}</span>
+                      /> 
+                      <span className="display-block">{item}</span>
                     </label>
                   </li>
                 ))}
@@ -139,25 +139,11 @@ export default function BoardPage() {
             />
           </div>
 
-          {/* Search / Write 버튼들 */}
-          <div className="mt-10 bg-black p-5 flex items-center justify-center hover:bg-gray-800">
-            <span className="text-center text-white text-lg">SEARCH</span>
-          </div>
-          <div className="mt-2 bg-black p-5 flex items-center justify-center hover:bg-gray-800">
-            <Link href="/platform/write">
-              <span className="text-center text-white text-lg">WRITE</span>
-            </Link>
-          </div>
-          <div className="mt-2 bg-black p-5 flex items-center justify-center hover:bg-gray-800">
-            <Link href="/platform/manage">
-              <span className="text-center text-white text-lg">MANAGE</span>
-            </Link>
-          </div>
+          
         </aside>
 
         {/* 게시글 목록 영역 */}
-        <main className="w-full md:w-3/4">
-          <h1 className="text-3xl font-bold mb-4">Board</h1>
+        <main className="w-full md:w-5/6">
 
           {/* 반응형 그리드: 모바일 1열, sm 2열, md 3열 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -165,11 +151,11 @@ export default function BoardPage() {
               <Link key={post.id} href={`/platform/view/${post.id}`}>
                 <div
                   className="
-                    bg-white shadow-md p-4 hover:bg-gray-100 
+                    shadow-md p-4 hover:bg-gray-900 
                     min-h-[350px] flex flex-col justify-start
                   "
                 >
-                  <p className="text-left mb-2">
+                  <p className="text-left mb-2 font-bold">
                     {post.category} ｜ {post.topics}
                   </p>
                   <img
@@ -177,16 +163,9 @@ export default function BoardPage() {
                     alt="Thumbnail"
                     className="w-full h-40 object-cover mb-2"
                   />
-                  <h2 className="font-semibold text-xl">{post.title}</h2>
+                  <h2 className="font-semibold text-xl mb-4">{post.title}</h2>
                   <p className="text-gray-600">
                     {post.writer} | 조회수 : {post.views}
-                  </p>
-                  <p className="mt-auto text-gray-600 line-clamp-2">
-                    {(post.content || "")
-                      .replace(/<\/?[^>]+(>|$)/g, "")
-                      .replace(/[*_~`]/g, "")
-                      .replace(/\n/g, " ")
-                      .slice(0, 50) + "..."}
                   </p>
                 </div>
               </Link>
@@ -207,8 +186,25 @@ export default function BoardPage() {
               </button>
             ))}
           </div>
+
+          
         </main>
+        
       </div>
+      <span>관리 메뉴 (사라질 예정)</span>
+          <div className="grid grid-cols-10 gap-2 mb-5">
+            
+            <div className="mt-2 w-30 p-5 flex items-center bg-gray-800 justify-center hover:bg-gray-800">
+              <Link href="/platform/write">
+                <span className="text-center text-white text-sm">WRITE</span>
+              </Link>
+            </div>
+            <div className="mt-2 w-30 bg-black p-5 flex items-center bg-gray-800 justify-center hover:bg-gray-800">
+              <Link href="/platform/manage">
+                <span className="text-center text-white text-sm">MANAGE</span>
+              </Link>
+            </div>
+          </div>
     </div>
   );
 }

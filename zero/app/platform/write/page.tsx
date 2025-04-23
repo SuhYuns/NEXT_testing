@@ -192,7 +192,7 @@ export default function WritePost() {
         disabled={submitting}
         className="w-full mt-6 bg-gray-500 text-white py-3 rounded font-bold hover:bg-gray-400 disabled:opacity-50"
       >
-        {submitting ? "저장 중..." : "UPLOAD"}
+        {submitting ? "저장 중..." : "글쓰기"}
       </button>
     </div>
   );
