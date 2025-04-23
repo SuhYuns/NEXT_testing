@@ -19,7 +19,7 @@ export default function EditPostPage() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [topics, setTopics] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
   const [content, setContent] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -125,7 +125,7 @@ export default function EditPostPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">UPDATE POST</h1>
+      <h1 className="text-3xl font-bold mb-6">포스팅 수정하기</h1>
 
       {/* Title */}
       <label className="block mb-2 font-bold">Title</label>

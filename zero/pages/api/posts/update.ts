@@ -18,19 +18,19 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  // 2) 파라미터 파싱
-  const { id, title, category, topics, thumbnailUrl, content } = req.body;
+  // 2) 파라미터 파싱 (thumbnailUrl → thumbnail 으로 변경)
+  const { id, title, category, topics, thumbnail, content } = req.body;
   if (!id) {
     return res.status(400).json({ error: 'Missing post ID' });
   }
 
   // 3) 업데이트할 필드만 모아서
   const updates: Record<string, any> = {};
-  if (title)       updates.title     = title;
-  if (category)    updates.category  = category;
-  if (topics)      updates.topics    = topics;
-  if (thumbnailUrl) updates.thumbnail = thumbnailUrl;  // 컬럼명이 thumbnail이라면
-  if (content)     updates.content   = content;
+  if (title)        updates.title     = title;
+  if (category)     updates.category  = category;
+  if (topics)       updates.topics    = topics;
+  if (thumbnail)    updates.thumbnail = thumbnail;  // body.thumbnail 값을 thumbnail 컬럼에
+  if (content)      updates.content   = content;
 
   // 4) 실제 업데이트
   const { error } = await supabaseAdmin

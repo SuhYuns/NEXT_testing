@@ -100,7 +100,7 @@ export default function WritePost() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">WRITE</h1>
+      <h1 className="text-3xl font-bold mb-6">포스팅 작성하기</h1>
 
       {/* Title */}
       <label className="block mb-2 font-bold">Title</label>
