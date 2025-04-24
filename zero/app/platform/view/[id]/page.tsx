@@ -8,6 +8,8 @@ import remarkGfm from "remark-gfm";
 export default function PostDetail() {
   const { id } = useParams() as { id: string };
   const [post, setPost] = useState<any>(null);
+  const [prev, setPrev]   = useState<any>(null);
+  const [next, setNext]   = useState<any>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +18,11 @@ export default function PostDetail() {
         if (!res.ok) throw new Error("Post not found");
         return res.json();
       })
-      .then((data) => setPost(data))
+      .then(({ post, prev_id, next_id }) => {
+        setPost(post);        // ← 실제 글만
+        setPrev(prev_id);
+        setNext(next_id);
+      })
       .catch(console.error);
   }, [id]);
 
@@ -112,6 +118,11 @@ export default function PostDetail() {
       >
         {sanitized}
       </ReactMarkdown>
+      <div>
+        <div className="bg-gray-100 py-0.5 mb-5"></div>
+        { next ? <a href={`/platform/view/${next.id}`} className="hover:bg-white hover:text-black"><span>🔺[다음글]</span> {next.title}</a> : <span className="text-gray-500">🔺[다음글] 다음글이 없습니다.</span> } <br /> 
+        { prev ? <a href={`/platform/view/${prev.id}`} className="hover:bg-white hover:text-black"><span>🔻[이전글]</span> {prev.title}</a> : <span className="text-gray-500">🔺[이전글] 이전글이 없습니다.</span> }
+      </div>
     </div>
   );
 }

@@ -156,7 +156,7 @@ export default function BoardPage() {
                     border rounded h-full 
                   "
                 >
-                  <p className="text-left mb-5 font-bold">
+                  <p className="text-left mt-2 mb-5 font-bold">
                     {post.category} ｜ {post.topics}
                   </p>
                   <img
@@ -179,8 +179,8 @@ export default function BoardPage() {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 border rounded ${
-                  currentPage === page ? "bg-gray-200" : "bg-gray-200"
+                className={`px-3 py-1 border hover:bg-white rounded ${
+                  currentPage === page ? "bg-gray-200" : "bg-gray-800"
                 }`}
               >
                 {page}

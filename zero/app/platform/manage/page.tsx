@@ -23,6 +23,8 @@ export default function ManagePostsPage() {
       body: JSON.stringify({ id, [field]: value }),
     });
 
+    console.log(field, value);
+
     if (!response.ok) {
       alert("업데이트 실패");
     } else {
@@ -42,11 +44,10 @@ export default function ManagePostsPage() {
 
       <table className="w-full table-auto border text-sm">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-gray-200 text-black">
             <th className="p-2 border">제목</th>
             <th className="p-2 border">토픽</th>
             <th className="p-2 border">카테고리</th>
-            <th className="p-2 border">작성자</th>
             <th className="p-2 border">게시 상태</th>
             <th className="p-2 border">내용</th>
           </tr>
@@ -68,7 +69,7 @@ export default function ManagePostsPage() {
                   onChange={(e) => handleUpdate(post.id, "topics", e.target.value)}
                 >
                   {topics.map((topic) => (
-                    <option key={topic} value={topic}>{topic}</option>
+                    <option key={topic} value={topic} className="text-black">{topic}</option>
                   ))}
                 </select>
               </td>
@@ -79,11 +80,10 @@ export default function ManagePostsPage() {
                   onChange={(e) => handleUpdate(post.id, "category", e.target.value)}
                 >
                   {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat} value={cat} className="text-black">{cat}</option>
                   ))}
                 </select>
               </td>
-              <td className="p-2 border">{post.writer}</td>
               <td className="p-2 border">
                 <input
                   type="checkbox"

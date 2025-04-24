@@ -19,7 +19,7 @@ export default async function handler(
   }
 
   // 2) 파라미터 파싱 (thumbnailUrl → thumbnail 으로 변경)
-  const { id, title, category, topics, thumbnail, content } = req.body;
+  const { id, title, category, topics, thumbnail, content, state } = req.body;
   if (!id) {
     return res.status(400).json({ error: 'Missing post ID' });
   }
@@ -31,6 +31,9 @@ export default async function handler(
   if (topics)       updates.topics    = topics;
   if (thumbnail)    updates.thumbnail = thumbnail;  // body.thumbnail 값을 thumbnail 컬럼에
   if (content)      updates.content   = content;
+  if (typeof state === 'boolean')      updates.state   = state;
+
+  console.log(updates.state);
 
   // 4) 실제 업데이트
   const { error } = await supabaseAdmin
