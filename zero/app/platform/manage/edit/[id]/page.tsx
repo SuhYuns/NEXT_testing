@@ -32,7 +32,9 @@ export default function EditPostPage() {
     if (!id) return;
     (async () => {
       const res = await fetch(`/api/posts/${id}`);
-      const data = await res.json();
+      console.log(res);
+      const { post } = await res.json();
+      const data = post;
       setTitle(data.title);
       setCategory(data.category);
       setTopics(data.topics);
@@ -143,11 +145,11 @@ export default function EditPostPage() {
         value={category}
         onChange={(e) => setCategory(e.target.value)}
       >
-        <option value="">select category</option>
-        <option value="zerobar original">zerobar original</option>
-        <option value="zerobar guest">zerobar guest</option>
-        <option value="Watt the science">Watt the science</option>
-        <option value="others">others</option>
+        <option value="" className="text-black">select category</option>
+        <option value="zerobar original" className="text-black">zerobar original</option>
+        <option value="zerobar guest" className="text-black">zerobar guest</option>
+        <option value="Watt the science" className="text-black">Watt the science</option>
+        <option value="others" className="text-black">others</option>
       </select>
 
       {/* Topic */}
@@ -157,11 +159,11 @@ export default function EditPostPage() {
         value={topics}
         onChange={(e) => setTopics(e.target.value)}
       >
-        <option value="">select topic</option>
-        <option value="energy">energy</option>
-        <option value="industry">industry</option>
-        <option value="law & policy">law & policy</option>
-        <option value="others">others</option>
+        <option value="" className="text-black">select topic</option>
+        <option value="energy" className="text-black">energy</option>
+        <option value="industry" className="text-black">industry</option>
+        <option value="law & policy" className="text-black">law & policy</option>
+        <option value="others" className="text-black">others</option>
       </select>
 
       {/* Thumbnail */}
