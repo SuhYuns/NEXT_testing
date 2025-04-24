@@ -153,7 +153,7 @@ export default function BoardPage() {
                   className="
                     shadow-md p-4 hover:bg-gray-900 
                     min-h-[350px] flex flex-col justify-start
-                    border rounded
+                    border rounded h-full 
                   "
                 >
                   <p className="text-left mb-2 font-bold">
@@ -162,7 +162,7 @@ export default function BoardPage() {
                   <img
                     src={post.thumbnail || `/thumbnail/${post.thumbnail}`}
                     alt="Thumbnail"
-                    className="w-full h-40 object-cover mb-2"
+                    className="w-full h-40 mb-2 object-cover"
                   />
                   <h2 className="font-semibold text-xl mb-4">{post.title}</h2>
                   <p className="text-gray-600">
@@ -180,7 +180,7 @@ export default function BoardPage() {
                 key={page}
                 onClick={() => setCurrentPage(page)}
                 className={`px-3 py-1 border rounded ${
-                  currentPage === page ? "bg-gray-200" : "bg-gray-800"
+                  currentPage === page ? "bg-gray-200" : "bg-gray-200"
                 }`}
               >
                 {page}

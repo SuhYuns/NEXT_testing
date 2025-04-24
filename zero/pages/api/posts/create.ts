@@ -17,14 +17,17 @@ export default async function createHandler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  const { title, category, topics, thumbnailUrl, content } = req.body;
+  const { title, category, topics, thumbnail, content } = req.body;
   if (!title || !category || !topics || !content) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  // 확인용
+  console.log("API 수신 : ", req.body);
+
   const { error } = await supabaseAdmin2
     .from('posts')
-    .insert([{ title, category, topics, thumbnail: thumbnailUrl, content }]);
+    .insert([{ title, category, topics, thumbnail, content }]);
 
   if (error) {
     console.error('Insert error:', error);

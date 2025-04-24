@@ -83,10 +83,12 @@ export default function WritePost() {
           title,
           category,
           topics,
-          thumbnailUrl,
+          thumbnail : thumbnailUrl,
           content,
         }),
       });
+      // 확인용
+      console.log("프론트단 전송 : ", res.body);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Create failed");
       alert("게시글이 작성되었습니다!");
