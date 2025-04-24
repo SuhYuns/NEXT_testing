@@ -29,26 +29,28 @@ export default function PostDetail() {
   );
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-6 max-w-3xl mx-auto mt-10">
       {/* 제목과 메타 */}
       <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="text-gray-500 mb-4">
+      <p className="text-white mb-5">
         {post.category} | {post.topics}
       </p>
+      <div className="bg-gray-100 py-0.5 mb-5"></div>
 
       {/* 썸네일 */}
-      {(post.thumbnail_url || post.thumbnail) && (
+      {/* {(post.thumbnail_url || post.thumbnail) && (
         <img
           src={post.thumbnail_url || post.thumbnail}
           alt="Thumbnail"
           className="w-full h-64 object-cover rounded mb-6"
         />
-      )}
+      )} */}
 
       {/* ReactMarkdown + 커스텀 컴포넌트 */}
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+
           // 헤딩
           h1: ({ node, ...props }) => (
             <h1 className="text-2xl font-bold mt-6 mb-4" {...props} />
@@ -62,7 +64,7 @@ export default function PostDetail() {
 
           // 단락
           p: ({ node, ...props }) => (
-            <p className="mb-4 leading-relaxed text-gray-800" {...props} />
+            <p className="mb-4 leading-relaxed text-white" {...props} />
           ),
 
           // 불릿 리스트
@@ -99,7 +101,7 @@ export default function PostDetail() {
 
           // 링크
           a: ({ node, ...props }) => (
-            <a className="text-blue-600 hover:underline" {...props} />
+            <a className="text-gray-400 underline hover:text-white"  target="_blank" {...props} />
           ),
 
           // 블록인용

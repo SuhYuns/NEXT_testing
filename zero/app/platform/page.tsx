@@ -78,7 +78,7 @@ export default function BoardPage() {
 
       {/* 모바일에서만 보이는 필터 토글 버튼 */}
       <button
-        className="md:hidden mb-10 x-3 bg-black p-5 ustify-center hover:bg-gray-800 w-full text-white"
+        className="md:hidden mb-10 x-3 bg-gray-800 p-5 ustify-center hover:bg-gray-700 w-full text-white"
         onClick={() => setFiltersOpen(!filtersOpen)}
       >
         {filtersOpen ? "Close Filters" : "Open Filters"}
@@ -153,6 +153,7 @@ export default function BoardPage() {
                   className="
                     shadow-md p-4 hover:bg-gray-900 
                     min-h-[350px] flex flex-col justify-start
+                    border rounded
                   "
                 >
                   <p className="text-left mb-2 font-bold">
@@ -179,7 +180,7 @@ export default function BoardPage() {
                 key={page}
                 onClick={() => setCurrentPage(page)}
                 className={`px-3 py-1 border rounded ${
-                  currentPage === page ? "bg-gray-300" : "bg-white"
+                  currentPage === page ? "bg-gray-200" : "bg-gray-800"
                 }`}
               >
                 {page}
