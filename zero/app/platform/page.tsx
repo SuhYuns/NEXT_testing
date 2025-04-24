@@ -156,7 +156,7 @@ export default function BoardPage() {
                     border rounded h-full 
                   "
                 >
-                  <p className="text-left mb-2 font-bold">
+                  <p className="text-left mb-5 font-bold">
                     {post.category} ｜ {post.topics}
                   </p>
                   <img
@@ -165,7 +165,7 @@ export default function BoardPage() {
                     className="w-full h-40 mb-2 object-cover"
                   />
                   <h2 className="font-semibold text-xl mb-4">{post.title}</h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-400">
                     {post.writer} | 조회수 : {post.views}
                   </p>
                 </div>
