@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw"; // HTML 허용
+import remarkBreaks from "remark-breaks"; // 줄바꿈 지원
 
 export default function PostDetail() {
   const { id } = useParams() as { id: string };
@@ -35,7 +37,7 @@ export default function PostDetail() {
   );
 
   return (
-    <div className="p-6 max-w-3xl mx-auto mt-10">
+    <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
       {/* 제목과 메타 */}
       <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
       <p className="text-white mb-5">
@@ -54,7 +56,8 @@ export default function PostDetail() {
 
       {/* ReactMarkdown + 커스텀 컴포넌트 */}
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        rehypePlugins={[rehypeRaw]} // ← 추가!!!
         components={{
 
           // 헤딩
@@ -70,7 +73,7 @@ export default function PostDetail() {
 
           // 단락
           p: ({ node, ...props }) => (
-            <p className="mb-4 leading-relaxed text-white" {...props} />
+            <p className="mb-4 leading-relaxed" {...props} />
           ),
 
           // 불릿 리스트

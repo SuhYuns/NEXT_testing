@@ -4,8 +4,167 @@ import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import { ICommand } from "@uiw/react-md-editor";
+import {
+  bold,
+  italic,
+  divider,
+  code,
+  unorderedListCommand,
+  orderedListCommand,
+  quote,
+  link
+} from "@uiw/react-md-editor";
+
+const COLORS = [
+  "#f44336", // Red
+  "#ff9800", // Orange
+  "#ffeb3b", // Yellow
+  "#4caf50", // Green
+  "#2196f3", // Blue
+  "#9c27b0", // Purple
+  "#000000", // Black
+  "#ffffff", // White
+];
+
+function ColorPickerButton({
+  type, // 'color' or 'highlight'
+  applyColor,
+}: {
+  type: "color" | "highlight";
+  applyColor: (color: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const COLORS = [
+    "#f44336", "#ff9800", "#ffeb3b", "#4caf50",
+    "#2196f3", "#9c27b0", "#000000", "#ffffff",
+  ];
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        className="px-1"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {type === "color"
+          ? <span style={{ color: "#f44336" }}>A</span>
+          : <span style={{ backgroundColor: "#ffeb3b", color: "black" }}>H</span>}
+      </button>
+
+      {open && (
+        <div className="absolute top-full mt-1 p-2 bg-white border rounded shadow grid grid-cols-4 gap-1 z-50">
+          {COLORS.map((color) => (
+            <button
+              key={color}
+              style={{ backgroundColor: color }}
+              className="w-6 h-6 rounded-full border border-gray-300"
+              onClick={() => {
+                applyColor(color);
+                setOpen(false);
+              }}
+              title={color}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
+
+export const CustomImageUploadCommand: ICommand = {
+  name: "upload-image",
+  keyCommand: "upload-image",
+  buttonProps: { "aria-label": "Upload Image" },
+  icon: <span>📷</span>,
+  execute: async (state, api) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      try {
+        const form = new FormData();
+        form.append("file", file);
+        const res = await fetch(`/api/uploadImage?folder=content`, {
+          method: "POST",
+          body: form,
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Upload failed");
+
+        // 👉 사용자 선택 (간단한 방식: prompt)
+        const width = prompt("이미지 비율(%):", "100");
+
+        const html = `<img src="${data.url}" style="width:${width}%;" alt="이미지" />`;
+
+        api.replaceSelection(html);
+      } catch (err: any) {
+        alert("이미지 업로드 실패: " + err.message);
+      }
+    };
+
+    input.click();
+  },
+};
+
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+
+const customUnderlineCommand: ICommand = {
+  name: "underline",
+  keyCommand: "underline",
+  buttonProps: { "aria-label": "Underline" },
+  icon: <span style={{ textDecoration: "underline" }}>U</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || "밑줄";
+    api.replaceSelection(`<u>${selectedText}</u>`);
+  },
+};
+
+const customTextColorCommand: ICommand = {
+  name: "textcolor",
+  keyCommand: "textcolor",
+  buttonProps: { "aria-label": "Text Color" },
+  icon: <span style={{ color: "red" }}>A</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || "텍스트";
+    const color = prompt("텍스트 색상을 입력하세요 (예: red, blue, gray)", "red");
+    if (!color) return;
+    api.replaceSelection(`<span style="color:${color};">${selectedText}</span>`);
+  },
+};
+
+const customHighlightCommand: ICommand = {
+  name: "highlight",
+  keyCommand: "highlight",
+  buttonProps: { "aria-label": "Highlight" },
+  icon: <span style={{ backgroundColor: "yellow" }}>H</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || "하이라이트";
+    const color = prompt("텍스트 색상을 입력하세요 (예: red, blue, gray)", "red");
+    api.replaceSelection(`<span style="background-color:${color};">${selectedText}</span>`);
+  },
+};
+
+const CustomBreakCommand: ICommand = {
+  name: "linebreak",
+  keyCommand: "linebreak",
+  buttonProps: { "aria-label": "줄바꿈" },
+  icon: <span>↵</span>,
+  execute: (state, api) => {
+    api.replaceSelection("<br />\n");
+  },
+};
+
 
 export default function WritePost() {
   const editorRef = useRef<any>(null);
@@ -17,7 +176,6 @@ export default function WritePost() {
   const [content, setContent] = useState("");
 
   const [uploadingThumb, setUploadingThumb] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // 서버에 파일 업로드 → public URL 반환
@@ -49,23 +207,6 @@ export default function WritePost() {
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleContentImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingImage(true);
-    try {
-      const url = await uploadToApi(file, "content");
-      setContent((prev) => prev + `\n![이미지](${url})\n`);
-    } catch (err: any) {
-      alert("본문 이미지 업로드 실패: " + err.message);
-    } finally {
-      setUploadingImage(false);
-      e.target.value = "";
-    }
-  };
 
 
   // 게시글 제출
@@ -160,25 +301,6 @@ export default function WritePost() {
         />
       )}
 
-      <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleContentImageUpload}
-          className="invisible"
-      />
-
-      <div className="flex justify-start mb-3">
-        <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploadingImage}
-            className="px-4 py-2 bg-gray-500 text-white rounded  hover:bg-gray-400 text-sm disabled:opacity-50"
-          >
-            {uploadingImage ? "업로드 중…" : "📷 본문 사진 업로드"}
-        </button>
-      </div>
-
       {/* Markdown Editor */}
       <label className="block mb-2 font-bold">Content</label>
       <MDEditor
@@ -186,6 +308,22 @@ export default function WritePost() {
         value={content}
         onChange={(v) => setContent(v || "")}
         height={500}
+        commands={[
+          bold,
+          italic,
+          divider,
+          quote,
+          link,
+          divider,
+          code,
+          unorderedListCommand,
+          orderedListCommand,
+          customUnderlineCommand,   // 커스텀 밑줄
+          customTextColorCommand,   // 커스텀 글자 색상
+          customHighlightCommand,   // 커스텀 하이라이트
+          CustomImageUploadCommand,
+          CustomBreakCommand
+        ]}
       />
 
       {/* Submit */}
