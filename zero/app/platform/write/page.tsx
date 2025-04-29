@@ -13,7 +13,8 @@ import {
   unorderedListCommand,
   orderedListCommand,
   quote,
-  link
+  link,
+  table
 } from "@uiw/react-md-editor";
 
 const COLORS = [
@@ -76,7 +77,7 @@ function ColorPickerButton({
 
 
 
-export const CustomImageUploadCommand: ICommand = {
+const CustomImageUploadCommand: ICommand = {
   name: "upload-image",
   keyCommand: "upload-image",
   buttonProps: { "aria-label": "Upload Image" },
@@ -316,6 +317,7 @@ export default function WritePost() {
           link,
           divider,
           code,
+          table,
           unorderedListCommand,
           orderedListCommand,
           customUnderlineCommand,   // 커스텀 밑줄
