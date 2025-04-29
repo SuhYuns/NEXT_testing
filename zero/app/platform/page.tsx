@@ -13,6 +13,14 @@ function toggleSelection(
   );
 }
 
+function formatDate(isoString: string) {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}년 ${month}월 ${day}일`;
+}
+
 export default function BoardPage() {
   // -------------------
   // 1) 게시글 로드
@@ -153,7 +161,7 @@ export default function BoardPage() {
                   className="
                     shadow-md p-4 hover:bg-gray-900 
                     min-h-[350px] flex flex-col justify-start
-                    border rounded h-full 
+                    border border-gray-400 rounded h-full 
                   "
                 >
                   <p className="text-left mt-2 mb-5 font-bold">
@@ -164,9 +172,9 @@ export default function BoardPage() {
                     alt="Thumbnail"
                     className="w-full h-40 mb-2 object-cover"
                   />
-                  <h2 className="font-semibold text-xl mb-4">{post.title}</h2>
+                  <h2 className="font-semibold text-xl mb-4 truncate">{post.title}</h2>
                   <p className="text-gray-400">
-                    {post.writer} | 조회수 : {post.views}
+                    {formatDate(post.created_at)}
                   </p>
                 </div>
               </Link>
@@ -192,20 +200,7 @@ export default function BoardPage() {
         </main>
         
       </div>
-      <span>관리 메뉴 (사라질 예정)</span>
-          <div className="grid grid-cols-10 gap-2 mb-5">
-            
-            <div className="mt-2 w-30 p-5 flex items-center bg-gray-800 justify-center hover:bg-gray-800">
-              <Link href="/platform/write">
-                <span className="text-center text-white text-sm">WRITE</span>
-              </Link>
-            </div>
-            <div className="mt-2 w-30 bg-black p-5 flex items-center bg-gray-800 justify-center hover:bg-gray-800">
-              <Link href="/platform/manage">
-                <span className="text-center text-white text-sm">MANAGE</span>
-              </Link>
-            </div>
-          </div>
+          
     </div>
   );
 }

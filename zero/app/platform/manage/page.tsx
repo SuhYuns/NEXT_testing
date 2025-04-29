@@ -3,6 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+function formatDateForInput(dateString: string) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export default function ManagePostsPage() {
   const [posts, setPosts] = useState<any[]>([]);
 
@@ -48,6 +59,7 @@ export default function ManagePostsPage() {
             <th className="p-2 border">제목</th>
             <th className="p-2 border">토픽</th>
             <th className="p-2 border">카테고리</th>
+            <th className="p-2 border">게시일</th>
             <th className="p-2 border">게시 상태</th>
             <th className="p-2 border">내용</th>
           </tr>
@@ -83,6 +95,14 @@ export default function ManagePostsPage() {
                     <option key={cat} value={cat} className="text-black">{cat}</option>
                   ))}
                 </select>
+              </td>
+              <td className="p-2 border">
+                <input
+                  type="datetime-local"
+                  value={formatDateForInput(post.created_at)}
+                  onChange={(e) => handleUpdate(post.id, "created_at", e.target.value)}
+                  className=" bg-gray-200 text-black"
+                />
               </td>
               <td className="p-2 border">
                 <input

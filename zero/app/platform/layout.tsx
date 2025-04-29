@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NEXT THINKING",
+  title: "ZERO ENERGY BAR BLOG",
   description: "사단법인 넥스트의 미디어 블로그",
 };
 
@@ -28,47 +29,71 @@ export default function RootLayout({
       >
 
 
-        <div className="container mx-auto bg-black text-white">   
+        <div className="container mx-auto bg-black text-white">
+          <div className="flex justify-end items-center gap-4 mr-5 pt-5 pb-5">
+            <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
+            <a href="https://www.linkedin.com/company/next-group-korea/" target="_black" className="hover:opacity-75"><img src="/blog/top_link2.png" className="w-6"/></a>
+            <a href="https://t.me/NEXTGroup2050" target="_black" className="hover:opacity-75"><img src="/blog/top_link3.png" className="w-6"/></a>
+            <a href="https://www.youtube.com/@zeroenergybar" target="_black" className="hover:opacity-75"><img src="/blog/top_link4.png" className="w-6"/></a>
+          
+          </div>  
           <a href="/platform">
             <div className="
                 h-[300px]
                 w-auto
-                relative
-
                 bg-[url('https://mkgpxawmsyiucaitvdgf.supabase.co/storage/v1/object/public/blog-uploads/zerobar.jpg')]
                 bg-center    /* 수평·수직 중앙 정렬 */
                 bg-cover     /* 비율 유지하며 가득 채우기 */
                 bg-no-repeat /* 반복 방지 *
             ">
-              
-
-                <div className="absolute inset-0 bg-black opacity-40 z-0 align-center"></div>
-
-                {/* 텍스트 컨텐츠 - z-index를 오버레이보다 높게 설정 */}
-                  {/* <div className="relative z-10 flex items-center justify-center h-full">
-                  
-                      <h1 className="text-5xl font-bold text-white w-f">NEXT THINKING</h1>
-                  </div> */}
-                
             </div>
-            <div className="bg-gray-800 opacity-40 py-10
-                mb-5">
+          </a>
+          <div className="bg-black py-5 ">
 
+          <div className="flex justify-end items-center gap-2 mr-5">
+            
+            <div className="p-2 flex items-center bg-gray-800 justify-center hover:opacity-75">
+              <Link href="/platform/write">
+                <span className="text-center text-white text-sm">✏️</span>
+              </Link>
             </div>
-            </a>
+            <div className="p-2 flex items-center bg-gray-800 justify-center hover:opacity-75">
+              <Link href="/platform/manage">
+                <span className="text-center text-white text-sm">⚙️</span>
+              </Link>
+            </div>
+          </div>
+          </div>
 
 
             {children}
 
 
 
-        <div className="h-[300px] mt-10 relative">
+        <div className="h-[250px] mt-20 relative">
 
-          <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
-          <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+          <div className="flex justify-between text-white m-5">
+            <div>
+              <h3 className="text-lg underline mb-2">About</h3>
+              <p className="mb-6">NEXT group</p>
 
-          <div className="relative z-10 flex justify-right pt-10 ml-10">
-              <h1 className="text-l text-white w-f">NEXT group</h1>
+              <p>서울 강남구 봉은사로 213</p>
+              <p>센트럴타워 9층</p>
+
+            </div>
+            <div>
+              <h3 className="text-lg underline mb-2">Contact</h3>
+
+              <div>
+                <p>미디어 협업 질문</p>
+                <p>media@nextgroup.or.kr</p>
+              </div>
+
+              <div>
+                <p>기타 문의</p>
+                <p>contact@nextgroup.or.kr</p>
+              </div>
+            </div>
           </div>
             
         </div>
