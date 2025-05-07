@@ -1,69 +1,95 @@
 // 📁 pages/api/uploadImage.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
-import { IncomingForm, File as FormidableFile } from 'formidable';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { createClient } from "@supabase/supabase-js";
+import fs from "fs/promises";
+import formidable, { File as FFile } from "formidable";
+import { v4 as uuid } from "uuid";
 
-// Disable Next.js default body parsing for Formidable
+/** Next.js 기본 bodyParser 끄기 (Formidable이 직접 multipart 처리) */
 export const config = { api: { bodyParser: false } };
 
-// Admin client using Service Role key for RLS bypass
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+/* ───────────────────────── Supabase Admin ──────────────────────────
+   - URL은 공개되어도 상관없지만, 서비스 롤 키는 절대 NEXT_PUBLIC 로 노출 X
+   - .env.local 예시
+     SUPABASE_URL               = https://xyz.supabase.co
+     SUPABASE_SERVICE_ROLE_KEY  = eyJhbGciOiJIUzI1…
+     NEXT_PUBLIC_SUPABASE_BUCKET= blog-uploads
+*/
+const supabase = createClient(
+  process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Handles POST /api/uploadImage?folder=thumbnails|content
+/** multipart/form-data → Promise 기반 파서 */
+function parseForm(
+  req: NextApiRequest
+): Promise<{ file: FFile; folder: string }> {
+  return new Promise((resolve, reject) => {
+    const form = formidable({ multiples: false });
+    form.parse(req, (err, _fields, files) => {
+      if (err) return reject(err);
+
+      /* 1) folder 쿼리 파라미터 확인 */
+      const folder = Array.isArray(req.query.folder)
+        ? req.query.folder[0]
+        : (req.query.folder as string);
+      if (!folder)
+        return reject(new Error("folder query param is required"));
+
+      /* 2) SunEditor: file-0 / file-1 …  썸네일: file */
+      const key = Object.keys(files).find((k) => k.startsWith("file"));
+      if (!key) return reject(new Error("No file uploaded"));
+
+      const anyFiles = files as Record<string, FFile | FFile[] | undefined>;
+      const target = anyFiles[key]!; // key 존재 확정
+      const file: FFile = Array.isArray(target) ? target[0] : target;
+
+      resolve({ file, folder });
+    });
+  });
+}
+
+/** POST /api/uploadImage?folder=thumbnails|content */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  // Determine folder from query string
-  const folder = Array.isArray(req.query.folder)
-    ? req.query.folder[0]
-    : (req.query.folder as string);
-  if (!folder) return res.status(400).json({ error: 'folder query param is required' });
+  try {
+    /* ───── 1. multipart 파싱 ───── */
+    const { file, folder } = await parseForm(req);
 
-  // Parse multipart form
-  const form = new IncomingForm();
-  form.parse(req, async (err, _fields, files) => {
-    if (err) return res.status(500).json({ error: err.message });
+    /* ───── 2. Supabase Storage 업로드 ───── */
+    const safeName = (file.originalFilename ?? "image").replace(
+      /[^a-z0-9.\-_]/gi,
+      "_"
+    );
+    const ext = safeName.split(".").pop();
+    const path = `${folder}/${uuid()}.${ext}`;
 
-    // files.file can be a single File or array of Files
-    const fileField = files.file;
-    if (!fileField) return res.status(400).json({ error: 'No file uploaded' });
-    const file = Array.isArray(fileField)
-      ? fileField[0] as FormidableFile
-      : fileField as FormidableFile;
+    const buffer = await fs.readFile(file.filepath);
+    const { error: upErr } = await supabase.storage
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
+      .upload(path, buffer, { upsert: false });
+    if (upErr) throw upErr;
 
-    try {
-      // Sanitize filename
-      const safeName = (file.originalFilename ?? 'file')
-        .replace(/[^a-zA-Z0-9.\-_]/g, '_');
-      const filePath = `${folder}/${Date.now()}_${safeName}`;
+    /* ───── 3. 공개 URL 생성 ───── */
+    const { data } = supabase.storage
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
+      .getPublicUrl(path);
 
-            // Read file into buffer to avoid duplex error in Node fetch
-      const fileData = await fs.promises.readFile(file.filepath);
-      const { data: uploadData, error: uploadErr } = await supabaseAdmin.storage
-        .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
-        .upload(filePath, fileData, { upsert: false });
-      if (uploadErr) throw uploadErr;
-
-      // Get public URL
-      const { data: urlData } = supabaseAdmin.storage
-        .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
-        .getPublicUrl(uploadData.path);
-      if (!urlData?.publicUrl) throw new Error('Unable to retrieve public URL');
-
-      return res.status(200).json({ url: urlData.publicUrl });
-    } catch (uploadError: any) {
-      console.error(uploadError);
-      return res.status(500).json({ error: uploadError.message });
-    }
-  });
+    /* ───── 4. SunEditor 규격 응답 ───── */
+    return res.status(200).json({
+      url: data.publicUrl, 
+      errorMessage: "",
+      result: [{ url: data.publicUrl, name: safeName, size: file.size }],
+    });
+  } catch (e: any) {
+    console.error(e);
+    return res.status(400).json({ error: e.message ?? "upload error" });
+  }
 }

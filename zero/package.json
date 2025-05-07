@@ -31,7 +31,10 @@
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
     "remark-breaks": "^4.0.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "suneditor": "^2.47.5",
+    "suneditor-react": "^3.6.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

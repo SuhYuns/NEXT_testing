@@ -37,12 +37,16 @@ export default function PostDetail() {
   );
 
   return (
-    <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
+    // <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
+    <div className="w-full mt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 bg-white text-black">
       {/* 제목과 메타 */}
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="text-white mb-5">
+      <p className="mb-5">
         {post.category} | {post.topics}
       </p>
+
+      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      {new Date(post.created_at).toLocaleDateString("ko-KR")}
+
       <div className="bg-gray-100 py-0.5 mb-5"></div>
 
       {/* 썸네일 */}
@@ -122,7 +126,7 @@ export default function PostDetail() {
         {sanitized}
       </ReactMarkdown>
       <div>
-        <div className="bg-gray-100 py-0.5 mb-5"></div>
+        <div className="bg-gray-100 py-0.5 mb-5 mt-10"></div>
         { next ? <a href={`/platform/view/${next.id}`} className="hover:bg-white hover:text-black"><span>🔺[다음글]</span> {next.title}</a> : <span className="text-gray-500">🔺[다음글] 다음글이 없습니다.</span> } <br /> 
         { prev ? <a href={`/platform/view/${prev.id}`} className="hover:bg-white hover:text-black"><span>🔻[이전글]</span> {prev.title}</a> : <span className="text-gray-500">🔺[이전글] 이전글이 없습니다.</span> }
       </div>
