@@ -38,8 +38,11 @@ export default function PostDetail() {
 
   return (
     // <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
-    <div className="w-full mt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 bg-white text-black">
-      {/* 제목과 메타 */}
+    // <div className="w-full mt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 bg-white text-black"></div>
+    <div className=" bg-white pt-15">
+    <div className="p-6 max-w-3xl mx-auto bg-white text-black sm:text-sm">
+      
+      
       <p className="mb-5">
         {post.category} | {post.topics}
       </p>
@@ -127,9 +130,10 @@ export default function PostDetail() {
       </ReactMarkdown>
       <div>
         <div className="bg-gray-100 py-0.5 mb-5 mt-10"></div>
-        { next ? <a href={`/platform/view/${next.id}`} className="hover:bg-white hover:text-black"><span>🔺[다음글]</span> {next.title}</a> : <span className="text-gray-500">🔺[다음글] 다음글이 없습니다.</span> } <br /> 
-        { prev ? <a href={`/platform/view/${prev.id}`} className="hover:bg-white hover:text-black"><span>🔻[이전글]</span> {prev.title}</a> : <span className="text-gray-500">🔺[이전글] 이전글이 없습니다.</span> }
+        { next ? <a href={`/platform/view/${next.id}`} className="hover:bg-white hover:text-gray"><span>🔺[다음글]</span> {next.title}</a> : <span className="text-gray-500">🔺[다음글] 다음글이 없습니다.</span> } <br /> 
+        { prev ? <a href={`/platform/view/${prev.id}`} className="hover:bg-white hover:text-gray"><span>🔻[이전글]</span> {prev.title}</a> : <span className="text-gray-500">🔺[이전글] 이전글이 없습니다.</span> }
       </div>
+    </div>
     </div>
   );
 }

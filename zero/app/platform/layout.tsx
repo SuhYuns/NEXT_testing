@@ -29,7 +29,7 @@ export default function RootLayout({
       >
 
 
-        <div className="container mx-auto bg-black text-white">
+        <div className="container mx-auto bg-black px-0 max-w-none text-white">
           <div className="flex justify-end items-center gap-4 mr-5 pt-5 pb-5">
             <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
             <a href="https://www.linkedin.com/company/next-group-korea/" target="_black" className="hover:opacity-75"><img src="/blog/top_link2.png" className="w-6"/></a>
