@@ -161,14 +161,30 @@ export default function EditPostPage() {
       <SunEditor
         setOptions={{
           height: "1000px",
+      
+          /* ────── 툴바 구성 ────── */
           buttonList: [
             ["undo", "redo"],
+            ["font", "fontSize", "formatBlock"],     // 글꼴·크기
             ["bold", "italic", "underline", "strike"],
             ["fontColor", "hiliteColor"],
-            ["align", "formatBlock", "list", "table"],
+            ["align", "horizontalRule", "list", "table"], // ← hr 대신 horizontalRule
             ["link", "image", "video"],
             ["codeView"],
           ],
+      
+          /* ────── 글꼴·크기 목록 (원하는 값만 남기면 됨) ────── */
+          font: [
+            "Pretendard",
+            "Nanum Gothic",
+            "Noto Sans KR",
+            "Arial",
+            "Courier New",
+            "Georgia",
+          ],
+          fontSize: [8, 10, 12, 14, 16, 18, 20, 24, 28, 36, 48, 60],
+      
+          /* ────── 이미지 업로드 기타 옵션 ────── */
           imageUploadUrl: "/api/uploadImage?folder=content",
           imageResizing: true,
           imageWidth: "100%",
