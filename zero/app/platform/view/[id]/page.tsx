@@ -6,6 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw"; // HTML 허용
 import remarkBreaks from "remark-breaks"; // 줄바꿈 지원
+import Spinner from "@/component/Spinner";
+import { motion } from "framer-motion"
 
 export default function PostDetail() {
   const { id } = useParams() as { id: string };
@@ -28,7 +30,13 @@ export default function PostDetail() {
       .catch(console.error);
   }, [id]);
 
-  if (!post) return <p>Loading…</p>;
+  if (!post) {
+    return (
+      <main className="relative min-h-[60vh] flex items-center justify-center">
+        <Spinner />
+      </main>
+    );
+  }
 
   // 깨진 이미지 문법 복구 (줄바꿈 제거)
   const sanitized = post.content.replace(
