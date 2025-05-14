@@ -50,7 +50,7 @@ export default function RootLayout({
           </a>
           <div className="bg-black py-5 ">
 
-          <div className="flex justify-end items-center gap-2 mr-5">
+          {/* <div className="flex justify-end items-center gap-2 mr-5">
             
             <div className="p-2 flex items-center bg-gray-800 justify-center hover:opacity-75">
               <Link href="/platform/write">
@@ -62,7 +62,7 @@ export default function RootLayout({
                 <span className="text-center text-white text-sm">⚙️</span>
               </Link>
             </div>
-          </div>
+          </div> */}
           </div>
 
 
@@ -78,7 +78,7 @@ export default function RootLayout({
               <p className="mb-6">NEXT group</p>
 
               <p>서울 강남구 봉은사로 213</p>
-              <p>센트럴타워 9층</p>
+              <p>센트럴타워 8층</p>
 
             </div>
             <div>
