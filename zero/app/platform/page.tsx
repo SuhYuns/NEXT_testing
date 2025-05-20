@@ -154,8 +154,9 @@ export default function BoardPage() {
         <main className="w-full md:w-5/6">
 
           {/* 반응형 그리드: 모바일 1열, sm 2열, md 3열 */}
+          { currentPosts.length != 0 ?
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {currentPosts.map((post) => (
+             { currentPosts.map((post) => (
               <Link key={post.id} href={`/platform/view/${post.id}`}>
                 <div
                   className="
@@ -178,8 +179,15 @@ export default function BoardPage() {
                   </p>
                 </div>
               </Link>
-            ))}
+            )) 
+            
+          
+            }
+          </div> :
+          <div className="w-full flex justify-center mt-20">
+            조건에 일치하는 게시글이 없습니다.
           </div>
+          }
 
           {/* 페이지네이션 버튼 */}
           <div className="flex justify-center mt-15 space-x-2">

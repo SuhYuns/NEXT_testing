@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import BlogUser from '@/component/BlogUser';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +50,8 @@ export default function RootLayout({
             </div>
           </a>
           <div className="bg-black py-5 ">
+
+          <BlogUser></BlogUser>
 
           {/* <div className="flex justify-end items-center gap-2 mr-5">
             
