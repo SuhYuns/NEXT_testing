@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import BlogUser from '@/component/BlogUser';
 
 const geistSans = Geist({
@@ -75,17 +74,17 @@ export default function RootLayout({
 
         <div className="h-[250px] mt-20 relative">
 
-          <div className="flex justify-between text-white m-5">
+          <div className="flex justify-between text-white m-5 text-xs">
             <div>
-              <h3 className="text-lg underline mb-2">About</h3>
+              <h3 className="text-base underline mb-2">About</h3>
               <p className="mb-6">NEXT group</p>
 
               <p>서울 강남구 봉은사로 213</p>
-              <p>센트럴타워 8층</p>
+              <p>센트럴타워 8-9 층</p>
 
             </div>
             <div>
-              <h3 className="text-lg underline mb-2">Contact</h3>
+              <h3 className="text-base underline mb-2">Contact</h3>
 
               <div>
                 <p>미디어 협업 질문</p>
