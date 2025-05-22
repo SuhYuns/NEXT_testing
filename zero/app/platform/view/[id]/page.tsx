@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw"; // HTML 허용
 import remarkBreaks from "remark-breaks"; // 줄바꿈 지원
 import Spinner from "@/component/Spinner";
-import { motion } from "framer-motion"
+
 
 export default function PostDetail() {
   const { id } = useParams() as { id: string };
@@ -26,8 +26,11 @@ export default function PostDetail() {
         setPost(post);        // ← 실제 글만
         setPrev(prev_id);
         setNext(next_id);
+        document.title = 'ZERO ENERGY BAR | ' + post.title.toString();
       })
       .catch(console.error);
+
+      
   }, [id]);
 
   if (!post) {
@@ -47,6 +50,7 @@ export default function PostDetail() {
   return (
     // <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
     // <div className="w-full mt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 bg-white text-black"></div>
+    
     <div className=" bg-white pt-15">
     <div className="p-6 max-w-3xl mx-auto bg-white text-black sm:text-sm">
       
@@ -125,7 +129,7 @@ export default function PostDetail() {
 
           // 링크
           a: ({ node, ...props }) => (
-            <a className="text-gray-400 underline hover:text-white"  target="_blank" {...props} />
+            <a className="text-gray-400 underline hover:shadow-400"  target="_blank" {...props} />
           ),
 
           // 블록인용

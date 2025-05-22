@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import "suneditor/dist/css/suneditor.min.css";
+import HistoryList from './HistoryList';
 
 const SunEditor = dynamic(() => import("suneditor-react"), { ssr: false });
 
@@ -94,6 +95,8 @@ export default function EditPostPage() {
       setSubmitting(false);
     }
   };
+
+  
 
   if (loading) return <p className="p-6">로딩 중…</p>;
 
@@ -201,6 +204,8 @@ export default function EditPostPage() {
       >
         {submitting ? "저장 중…" : "수정하기"}
       </button>
+
+      <HistoryList postId={id} />
     </div>
   );
 }
