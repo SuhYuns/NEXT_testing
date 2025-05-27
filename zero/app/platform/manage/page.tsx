@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import EditCheck from '@/component/EditCheck';
 
 function formatDateForInput(dateString: string) {
   const date = new Date(dateString);
@@ -16,6 +17,7 @@ function formatDateForInput(dateString: string) {
 
 export default function ManagePostsPage() {
   const [posts, setPosts] = useState<any[]>([]);
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -43,22 +45,28 @@ export default function ManagePostsPage() {
         post.id === id ? { ...post, [field]: value } : post
       );
       setPosts(updatedPosts);
+      setShowUpdateToast(true);
     }
   };
 
-  const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
-  const topics = ["energy", "industry", "law & policy", "others"];
+  // const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
+  const topics = ["Energy", "Industry", "Law & Policy", "Science", "Others"];
+
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">게시글 관리</h1>
+
+      {showUpdateToast && (
+        <EditCheck onClose={() => setShowUpdateToast(false)} />
+      )}
 
       <table className="w-full table-auto border text-sm">
         <thead>
           <tr className="bg-gray-200 text-black">
             <th className="p-2 border">제목</th>
             <th className="p-2 border">토픽</th>
-            <th className="p-2 border">카테고리</th>
+            {/* <th className="p-2 border">카테고리</th> */}
             <th className="p-2 border">게시일</th>
             <th className="p-2 border">게시 상태</th>
             <th className="p-2 border">내용</th>
@@ -85,7 +93,7 @@ export default function ManagePostsPage() {
                   ))}
                 </select>
               </td>
-              <td className="p-2 border">
+              {/* <td className="p-2 border">
                 <select
                   className="w-full border p-1"
                   value={post.category}
@@ -95,7 +103,7 @@ export default function ManagePostsPage() {
                     <option key={cat} value={cat} className="text-black">{cat}</option>
                   ))}
                 </select>
-              </td>
+              </td> */}
               <td className="p-2 border">
                 <input
                   type="datetime-local"

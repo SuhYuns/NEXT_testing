@@ -38,11 +38,11 @@ export default function BoardPage() {
   // -------------------
   const [filtersOpen, setFiltersOpen] = useState(false); // 모바일에서 열고 닫기
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  // const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const topics = ["energy", "industry", "law & policy", "others"];
-  const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
+  const topics = ["Energy", "Industry", "Law & Policy", "Science", "Others"];
+  // const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
 
   const [sortBy, setSortBy] = useState<"popular" | "latest" | "oldest">("latest");
 
@@ -53,8 +53,8 @@ export default function BoardPage() {
     if (!post.state) return false;
     const matchTopic =
       selectedTopics.length === 0 || selectedTopics.includes(post.topics);
-    const matchCategory =
-      selectedCategories.length === 0 || selectedCategories.includes(post.category);
+    // const matchCategory =
+    //   selectedCategories.length === 0 || selectedCategories.includes(post.category);
 
     const lowerSearch = searchTerm.toLowerCase();
     const matchSearch =
@@ -63,7 +63,8 @@ export default function BoardPage() {
       post.content?.toLowerCase().includes(lowerSearch) ||
       post.writer?.toLowerCase().includes(lowerSearch);
 
-    return matchTopic && matchCategory && matchSearch;
+    return matchTopic && matchSearch;
+    // return matchTopic && matchCategory && matchSearch;
   });
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -87,7 +88,8 @@ export default function BoardPage() {
   // 필터가 바뀔 때마다 첫 페이지로 이동
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedTopics, selectedCategories, searchTerm]);
+  }, [selectedTopics, searchTerm]);
+  // }, [selectedTopics, selectedCategories, searchTerm]);
 
   const indexOfLast  = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast  - postsPerPage;
@@ -127,7 +129,7 @@ export default function BoardPage() {
           {/* 토픽/카테고리 공용 로직 */}
           {[ 
             { label: "TOPIC", items: topics, state: selectedTopics, setState: setSelectedTopics },
-            { label: "CATEGORY", items: categories, state: selectedCategories, setState: setSelectedCategories },
+            // { label: "CATEGORY", items: categories, state: selectedCategories, setState: setSelectedCategories },
           ].map(({ label, items, state, setState }) => (
             <div key={label} className="mt-4">
               <h3 className="font-semibold">{label}</h3>
@@ -203,7 +205,8 @@ export default function BoardPage() {
                   "
                 >
                   <p className="text-left mt-2 mb-5 font-bold">
-                    {post.category} ｜ {post.topics}
+                    {/* {post.category} ｜  */}
+                    {post.topics}
                   </p>
                   <img
                     src={post.thumbnail || `/thumbnail/${post.thumbnail}`}

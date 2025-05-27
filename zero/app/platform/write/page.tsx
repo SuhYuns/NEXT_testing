@@ -10,7 +10,7 @@ const SunEditor = dynamic(() => import("suneditor-react"), { ssr: false });
 export default function WritePost() {
   // ──────────────────────────── state ────────────────────────────
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("비사용");
   const [topics, setTopics] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [content, setContent] = useState("");           // SunEditor → HTML 문자열
@@ -94,7 +94,7 @@ export default function WritePost() {
       />
 
       {/* ───── 카테고리 ───── */}
-      <label className="block mb-2 font-bold">Category</label>
+      {/* <label className="block mb-2 font-bold">Category</label>
       <select
         className="w-full p-2 border rounded mb-4"
         value={category}
@@ -105,7 +105,7 @@ export default function WritePost() {
         <option value="ZERO BAR guest">ZERO BAR guest</option>
         <option value="Watt the science">Watt the science</option>
         <option value="others">others</option>
-      </select>
+      </select> */}
 
       {/* ───── 토픽 ───── */}
       <label className="block mb-2 font-bold">Topic</label>
@@ -114,11 +114,12 @@ export default function WritePost() {
         value={topics}
         onChange={(e) => setTopics(e.target.value)}
       >
-        <option value="">select topic</option>
-        <option value="energy">energy</option>
-        <option value="industry">industry</option>
-        <option value="law & policy">law & policy</option>
-        <option value="others">others</option>
+        <option value="" className="text-black">select topic</option>
+        <option value="Energy" className="text-black">Energy</option>
+        <option value="Industry" className="text-black">Industry</option>
+        <option value="Law & Policy" className="text-black">Law & Policy</option>
+        <option value="Science" className="text-black">Science</option>
+        <option value="Others" className="text-black">Others</option>
       </select>
 
       {/* ───── 썸네일 ───── */}

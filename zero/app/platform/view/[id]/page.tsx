@@ -16,6 +16,11 @@ export default function PostDetail() {
   const [next, setNext]   = useState<any>(null);
 
   useEffect(() => {
+
+    document.querySelectorAll('.site-header').forEach(el => {
+      el.classList.add('hidden')
+    })
+
     if (!id) return;
     fetch(`/api/posts/${id}`)
       .then((res) => {
@@ -51,28 +56,50 @@ export default function PostDetail() {
     // <div className="p-6 max-w-3xl mx-auto mt-10 p-20 bg-white text-black">
     // <div className="w-full mt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 bg-white text-black"></div>
     
-    <div className=" bg-white pt-15">
+    <div className=" bg-white">
+      {/* 썸네일 */}
+      {(post.thumbnail_url || post.thumbnail) && (
+        <div className="relative w-full h-80 rounded overflow-hidden mb-6">
+          {/* 1) 배경 이미지 (z-0) */}
+          <img
+            src={post.thumbnail_url || post.thumbnail}
+            alt="Thumbnail"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* 2) 어두운 오버레이 (선택) */}
+          <div className="absolute inset-0 bg-black/40 z-10" />
+
+          {/* 3) 텍스트 컨테이너 (z-20) */}
+          <div className="
+              absolute
+              inset-x-0    /* 좌우 0 */
+              bottom-0     /* 바닥에 붙이기 */
+              z-20
+              max-w-3xl    /* 본문과 동일한 최대 너비 */
+              mx-auto      /* 가운데 정렬 */
+              px-6         /* 본문과 동일한 패딩 */
+              pb-6         /* 아래 여유(padding-bottom) */
+              mb-5
+              text-white
+              flex flex-col justify-end"
+            >
+            <p className="mb-1 text-sm">
+              {/* {post.category} ｜  */}
+              {post.topics}
+            </p>
+            <h1 className="text-3xl font-bold leading-snug mb-2">
+              {post.title}
+            </h1>
+            <p className="text-xs">
+              {new Date(post.created_at).toLocaleDateString("ko-KR")} {post.views} views
+            </p>
+          </div>
+        </div>
+      )}
+
+    <div className="bg-gray-100 py-0.5 mb-5"></div>
     <div className="p-6 max-w-3xl mx-auto bg-white text-black sm:text-sm">
       
-      
-      <p className="mb-5">
-        {post.category} | {post.topics}
-      </p>
-
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      {new Date(post.created_at).toLocaleDateString("ko-KR")}
-
-      <div className="bg-gray-100 py-0.5 mb-5"></div>
-
-      {/* 썸네일 */}
-      {/* {(post.thumbnail_url || post.thumbnail) && (
-        <img
-          src={post.thumbnail_url || post.thumbnail}
-          alt="Thumbnail"
-          className="w-full h-64 object-cover rounded mb-6"
-        />
-      )} */}
-
       {/* ReactMarkdown + 커스텀 컴포넌트 */}
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}

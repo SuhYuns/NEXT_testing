@@ -12,6 +12,7 @@ interface Profile {
   department?: string;
   position?: string;
   current_seat?: string;
+  
 }
 
 interface Seat {

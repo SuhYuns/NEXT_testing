@@ -32,25 +32,29 @@ export default function RootLayout({
 
 
         <div className="container mx-auto bg-black px-0 max-w-none text-white">
-          <div className="flex justify-end items-center gap-4 mr-5 pt-5 pb-5">
-            <p className="text-[#3d6d69]">ZERO ENERGY BAR BLOG</p>
-            <a href="https://www.youtube.com/@zeroenergybar" target="_black" className="hover:opacity-75"><img src="/blog/top_link4.png" className="w-6"/></a>
-              
-          </div>
-            
-           
-          <a href="/platform">
-            <div className="
-                h-[300px]
-                w-auto
-                bg-[url('https://mkgpxawmsyiucaitvdgf.supabase.co/storage/v1/object/public/blog-uploads/zerobar.jpg')]
-                bg-center    /* 수평·수직 중앙 정렬 */
-                bg-cover     /* 비율 유지하며 가득 채우기 */
-                bg-no-repeat /* 반복 방지 *
-            ">
+
+          <div>
+            <div className="flex justify-end items-center gap-4 pt-5 pb-5 mr-2 sm:mr-5 ">
+              <a href="/platform">
+                <p className="text-[#3d6d69] text-sm sm:text-base hover:opacity-75">ZERO ENERGY BAR BLOG</p>
+              </a>
+              <a href="https://www.youtube.com/@zeroenergybar" target="_black" className="hover:opacity-75"><img src="/blog/top_link4.png" className="w-6"/></a>
             </div>
-          </a>
-          <div className="bg-black py-5 ">
+            
+            <a href="/platform" className="site-header">
+              <div className="
+                  h-[300px]
+                  w-auto
+                  bg-[url('https://mkgpxawmsyiucaitvdgf.supabase.co/storage/v1/object/public/blog-uploads/zerobar.jpg')]
+                  bg-center    /* 수평·수직 중앙 정렬 */
+                  bg-cover     /* 비율 유지하며 가득 채우기 */
+                  bg-no-repeat /* 반복 방지 *
+              ">
+              </div>
+            </a>
+          </div>
+          
+          <div className="bg-black py-5 site-header">
 
 
           {/* <div className="flex justify-end items-center gap-2 mr-5">
