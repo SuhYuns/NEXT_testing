@@ -121,8 +121,8 @@ export default function EditPostPage() {
         onChange={(e) => setCategory(e.target.value)}
       >
         <option value="">select category</option>
-        <option value="zerobar original">zerobar original</option>
-        <option value="zerobar guest">zerobar guest</option>
+        <option value="ZERO BAR original">ZERO BAR original</option>
+        <option value="ZERO BAR guest">ZERO BAR guest</option>
         <option value="Watt the science">Watt the science</option>
         <option value="others">others</option>
       </select>

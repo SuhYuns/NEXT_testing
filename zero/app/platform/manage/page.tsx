@@ -46,7 +46,7 @@ export default function ManagePostsPage() {
     }
   };
 
-  const categories = ["zerobar original", "zerobar guest", "Watt the science", "others"];
+  const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
   const topics = ["energy", "industry", "law & policy", "others"];
 
   return (

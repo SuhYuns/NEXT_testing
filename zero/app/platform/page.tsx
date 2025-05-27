@@ -42,7 +42,9 @@ export default function BoardPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const topics = ["energy", "industry", "law & policy", "others"];
-  const categories = ["zerobar original", "zerobar guest", "Watt the science", "others"];
+  const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
+
+  const [sortBy, setSortBy] = useState<"popular" | "latest" | "oldest">("latest");
 
   // -------------------
   // 3) 게시글 필터링
@@ -64,6 +66,18 @@ export default function BoardPage() {
     return matchTopic && matchCategory && matchSearch;
   });
 
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortBy === "popular") {
+      // 예: views가 많은 순
+      return (b.views || 0) - (a.views || 0);
+    } else {
+      // created_at 기반 정렬
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      return sortBy === "latest" ? dateB - dateA : dateA - dateB;
+    }
+  });
+
   // -------------------
   // 4) 페이지네이션
   // -------------------
@@ -75,10 +89,10 @@ export default function BoardPage() {
     setCurrentPage(1);
   }, [selectedTopics, selectedCategories, searchTerm]);
 
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const indexOfLast  = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast  - postsPerPage;
+  const currentPosts = sortedPosts.slice(indexOfFirst, indexOfLast);
+  const totalPages   = Math.ceil(sortedPosts.length / postsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
@@ -108,7 +122,7 @@ export default function BoardPage() {
             
           `}
         >
-          <h2 className="text-lg font-bold mb-4">Filters</h2>
+          {/* <h2 className="text-lg font-bold mb-4">Filters</h2> */}
 
           {/* 토픽/카테고리 공용 로직 */}
           {[ 
@@ -135,6 +149,27 @@ export default function BoardPage() {
             </div>
           ))}
 
+          <div className="mt-4">
+            <h3 className="font-semibold">SORT BY</h3>
+            <div className="flex space-x-2">
+              {[
+                { key: "latest",  label: "Latest"  },
+                { key: "oldest",  label: "Oldest"  },
+                { key: "popular", label: "Popular" },
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setSortBy(key as any)}
+                  className={`px-3 py-1 border rounded hover:opacity-75 ${
+                    sortBy === key ? "bg-gray-200 text-gray-900" : "bg-gray-800 text-white"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* 검색어 입력 */}
           <div className="mt-4">
             <h3 className="font-semibold">SEARCH</h3>
@@ -146,6 +181,8 @@ export default function BoardPage() {
               placeholder="Search..."
             />
           </div>
+
+          
 
           
         </aside>

@@ -58,6 +58,7 @@ export default function HistoryList({ postId }: { postId: string }) {
           </ul>
         </div>
       ))}
+      
     </div>
   )
 }

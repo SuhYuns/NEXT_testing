@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import CopyableEmail from '../../component/CopyableEmail';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,8 @@ export const metadata: Metadata = {
   description: "사단법인 넥스트의 미디어 블로그",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,12 +33,12 @@ export default function RootLayout({
 
         <div className="container mx-auto bg-black px-0 max-w-none text-white">
           <div className="flex justify-end items-center gap-4 mr-5 pt-5 pb-5">
-            <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
-            <a href="https://www.linkedin.com/company/next-group-korea/" target="_black" className="hover:opacity-75"><img src="/blog/top_link2.png" className="w-6"/></a>
-            <a href="https://t.me/NEXTGroup2050" target="_black" className="hover:opacity-75"><img src="/blog/top_link3.png" className="w-6"/></a>
+            <p className="text-[#3d6d69]">ZERO ENERGY BAR BLOG</p>
             <a href="https://www.youtube.com/@zeroenergybar" target="_black" className="hover:opacity-75"><img src="/blog/top_link4.png" className="w-6"/></a>
-          
-          </div>  
+              
+          </div>
+            
+           
           <a href="/platform">
             <div className="
                 h-[300px]
@@ -74,24 +77,29 @@ export default function RootLayout({
 
           <div className="flex justify-between text-white m-5 text-xs">
             <div>
-              <h3 className="text-base underline mb-2">About</h3>
-              <p className="mb-6">NEXT group</p>
-
+              <div className="flex items-center gap-4 mr-5 pt-5 pb-5">
+                <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
+                <a href="https://www.linkedin.com/company/next-group-korea/" target="_black" className="hover:opacity-75"><img src="/blog/top_link2.png" className="w-6"/></a>
+                <a href="https://t.me/NEXTGroup2050" target="_black" className="hover:opacity-75"><img src="/blog/top_link3.png" className="w-6"/></a>
+                <a href="https://www.youtube.com/@zeroenergybar" target="_black" className="hover:opacity-75"><img src="/blog/top_link4.png" className="w-6"/></a>
+              </div> 
+              <p className="mb-6 font-bold">NEXT group</p>
+              
               <p>서울 강남구 봉은사로 213</p>
               <p>센트럴타워 8-9 층</p>
+              <p className="text-[#3d6d69]">COPYRIGHT 2025, NEXT GROUP, ALL RIGHTS RESERVED</p>
 
             </div>
-            <div>
-              <h3 className="text-base underline mb-2">Contact</h3>
+            <div className="mt-5">
+              <h3 className="text-base font-bold mb-2">Contact</h3>
 
               <div>
                 <p>미디어 협업 질문</p>
-                <p>media@nextgroup.or.kr</p>
+                <CopyableEmail email="media@nextgroup.or.kr" />
               </div>
-
               <div>
                 <p>기타 문의</p>
-                <p>contact@nextgroup.or.kr</p>
+                <CopyableEmail email="contact@nextgroup.or.kr" />
               </div>
             </div>
           </div>
