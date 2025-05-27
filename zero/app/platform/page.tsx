@@ -28,6 +28,7 @@ export default function BoardPage() {
   // -------------------
   const [posts, setPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,6 +37,12 @@ export default function BoardPage() {
       .then((data) => setPosts(data))
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // -------------------
@@ -251,7 +258,39 @@ export default function BoardPage() {
             ))}
           </div>
 
-          
+          {/* 모바일에서만 보이는 ‘위로가기’ 버튼 */}
+          {showTop && (
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="
+                fixed bottom-10 right-6
+                md:hidden
+                bg-[#3d6d69] hover:opacity-75
+                text-white
+                p-3
+                rounded-full
+                shadow-lg
+                transition
+                duration-200
+                ease-in-out
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </button>
+          )}
         </main>
         
       </div>

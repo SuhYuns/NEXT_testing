@@ -35,8 +35,11 @@ export default function CopyableEmail({ email }: CopyableEmailProps) {
         {email}
       </p>
       {isCopying && (
-        <div className="absolute -top-12 right-0 flex items-center space-x-2 bg-black bg-opacity-70 text-white px-3 py-1 rounded">
-          <div className="w-5 h-5 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
+        <div className="fixed top-4 right-4 flex items-center space-x-2
+        bg-black bg-opacity-70 text-white px-3 py-1 rounded
+        z-[1000]">
+<div className="w-5 h-5 border-2 border-gray-200 border-t-white
+          rounded-full animate-spin" />
           {showToast && <span className="text-xs">복사 완료</span>}
         </div>
       )}
