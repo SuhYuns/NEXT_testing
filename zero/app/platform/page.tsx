@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Spinner from "@/component/Spinner";
 
 // 토글 함수 (체크박스)
 function toggleSelection(
@@ -26,11 +27,15 @@ export default function BoardPage() {
   // 1) 게시글 로드
   // -------------------
   const [posts, setPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    setIsLoading(true);
     fetch("/api/posts")
       .then((res) => res.json())
       .then((data) => setPosts(data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
   }, []);
 
   // -------------------
@@ -43,6 +48,13 @@ export default function BoardPage() {
 
   const topics = ["Energy", "Industry", "Law & Policy", "Science", "Others"];
   // const categories = ["ZERO BAR original", "ZERO BAR guest", "Watt the science", "others"];
+  const topicDescriptions: Record<string,string> = {
+    Energy:        "에너지 생산·소비 관련 포스팅입니다.",
+    Industry:      "산업 관련 포스팅입니다.",
+    "Law & Policy":"법·정책 이슈 관련 포스팅입니다.",
+    Science:       "과학 연구·기술 관련 포스팅입니다.",
+    Others:        "기타 주제의 포스팅입니다."
+  };
 
   const [sortBy, setSortBy] = useState<"popular" | "latest" | "oldest">("latest");
 
@@ -131,50 +143,49 @@ export default function BoardPage() {
             { label: "TOPIC", items: topics, state: selectedTopics, setState: setSelectedTopics },
             // { label: "CATEGORY", items: categories, state: selectedCategories, setState: setSelectedCategories },
           ].map(({ label, items, state, setState }) => (
-            <div key={label} className="mt-4">
-              <h3 className="font-semibold">{label}</h3>
+            <div key={label} className="mt-4 w-1/2">
+              <h3 className="text-lg mb-1">{label}</h3>
               <ul className="">
-                {items.map((item) => (
-                  <li key={item}>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={state.includes(item)}
-                        onChange={() => toggleSelection(setState, item)}
-                        className="form-checkbox"
-                      /> 
-                      <span className="display-block">{item}</span>
-                    </label>
-                  </li>
-                ))}
+
+              {items.map(item => (
+                <li key={item} className="relative group">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={state.includes(item)}
+                      onChange={() => toggleSelection(setState, item)}
+                      className="form-checkbox"
+                    />
+                    <span>{item}</span>
+                  </label>
+                  {/* hover 시 토스트 */}
+                  <div className="absolute left-full top-1/2 ml-1 -translate-y-1/2 hidden group-hover:block
+                                  bg-black text-white text-xs p-1 rounded whitespace-nowrap">
+                    {topicDescriptions[item]}
+                  </div>
+                </li>
+              ))}
+
               </ul>
             </div>
           ))}
 
-          <div className="mt-4">
-            <h3 className="font-semibold">SORT BY</h3>
-            <div className="flex space-x-2">
-              {[
-                { key: "latest",  label: "Latest"  },
-                { key: "oldest",  label: "Oldest"  },
-                { key: "popular", label: "Popular" },
-              ].map(({ key, label }) => (
-                <button
-                  key={key}
-                  onClick={() => setSortBy(key as any)}
-                  className={`px-3 py-1 border rounded hover:opacity-75 ${
-                    sortBy === key ? "bg-gray-200 text-gray-900" : "bg-gray-800 text-white"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+          <div className="mt-4 text-lg mb-1">
+            <label className="block mb-1">SORT BY</label>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value as any)}
+              className="border p-2 py-1 rounded w-full"
+            >
+              <option value="latest" className="text-black">Latest</option>
+              <option value="oldest" className="text-black">Oldest</option>
+              <option value="popular" className="text-black">Popular</option>
+            </select>
           </div>
 
           {/* 검색어 입력 */}
-          <div className="mt-4">
-            <h3 className="font-semibold">SEARCH</h3>
+          <div className="mt-4 text-lg mb-1">
+            <h3>SEARCH</h3>
             <input
               type="text"
               value={searchTerm}
@@ -192,42 +203,38 @@ export default function BoardPage() {
         {/* 게시글 목록 영역 */}
         <main className="w-full md:w-5/6">
 
-          {/* 반응형 그리드: 모바일 1열, sm 2열, md 3열 */}
-          { currentPosts.length != 0 ?
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-             { currentPosts.map((post) => (
-              <Link key={post.id} href={`/platform/view/${post.id}`}>
-                <div
-                  className="
-                    shadow-md p-4 hover:bg-gray-900 
-                    min-h-[350px] flex flex-col justify-start
-                    border border-gray-400 rounded h-full 
-                  "
-                >
-                  <p className="text-left mt-2 mb-5 font-bold">
-                    {/* {post.category} ｜  */}
-                    {post.topics}
-                  </p>
-                  <img
-                    src={post.thumbnail || `/thumbnail/${post.thumbnail}`}
-                    alt="Thumbnail"
-                    className="w-full h-40 mb-2 object-cover"
-                  />
-                  <h2 className="font-semibold text-xl mb-4 truncate">{post.title}</h2>
-                  <p className="text-gray-400">
-                    {formatDate(post.created_at)}
-                  </p>
-                </div>
-              </Link>
-            )) 
-            
-          
-            }
-          </div> :
-          <div className="w-full flex justify-center mt-20">
-            조건에 일치하는 게시글이 없습니다.
-          </div>
-          }
+        {isLoading ? (
+        <div className="w-full flex justify-center mt-20">
+          <Spinner />
+        </div>
+      ) : currentPosts.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {currentPosts.map((post) => (
+            <Link key={post.id} href={`/platform/view/${post.id}`}>
+              <div className="shadow-md p-4 hover:bg-gray-900 min-h-[350px] flex flex-col justify-start border border-gray-400 rounded h-full">
+                <p className="text-left mt-2 mb-5 font-bold">
+                  {post.topics}
+                </p>
+                <img
+                  src={post.thumbnail || `/thumbnail/${post.thumbnail}`}
+                  alt="Thumbnail"
+                  className="w-full h-40 mb-2 object-cover"
+                />
+                <h2 className="font-semibold text-xl mb-4 truncate">
+                  {post.title}
+                </h2>
+                <p className="text-gray-400">
+                  {formatDate(post.created_at)}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="w-full flex justify-center mt-20">
+          조건에 일치하는 게시글이 없습니다.
+        </div>
+      )}
 
           {/* 페이지네이션 버튼 */}
           <div className="flex justify-center mt-15 space-x-2">

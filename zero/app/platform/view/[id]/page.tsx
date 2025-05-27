@@ -59,7 +59,7 @@ export default function PostDetail() {
     <div className=" bg-white">
       {/* 썸네일 */}
       {(post.thumbnail_url || post.thumbnail) && (
-        <div className="relative w-full h-80 rounded overflow-hidden mb-6">
+        <div className="relative w-full h-80 overflow-hidden rounded-none mb-6">
           {/* 1) 배경 이미지 (z-0) */}
           <img
             src={post.thumbnail_url || post.thumbnail}
