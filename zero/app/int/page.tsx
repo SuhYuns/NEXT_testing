@@ -17,8 +17,26 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold">메인 페이지</h1>
-      <h1 className="text-xl mt-5">콘텐츠 추후 추가 예정</h1>
+      <div className='mt-10 mb-15'>
+        <h1 className="text-3xl font-bold text-[#59bd7b]">환영합니다.</h1>
+        <h1 className="text-3xl font-bold text-[#59bd7b]">사단법인 넥스트입니다.</h1>
+        <p className="text-[#3d6d69]">Find the NEXT, envision the realization of a sustainable net-zero economic system</p>
+      </div>
+
+      {/* 데스크톱용(640px 이상) */}
+      <img
+        src="https://mkgpxawmsyiucaitvdgf.supabase.co/storage/v1/object/public/blog-uploads/intro-next-pc.png"
+        alt="NEXT 소개 PC"
+        className="mx-auto hidden sm:block"
+      />
+
+      {/* 모바일용(640px 미만) */}
+      <img
+        src="https://mkgpxawmsyiucaitvdgf.supabase.co/storage/v1/object/public/blog-uploads/intro-next-mo.png"
+        alt="NEXT 소개 Mobile"
+        className="mx-auto sm:hidden"
+      />
+
     </main>
   );
 }

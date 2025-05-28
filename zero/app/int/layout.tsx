@@ -121,10 +121,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* 네비게이션 바 */}
       <nav className="bg-[#59bd7b] p-6 pr-10 text-white flex justify-between items-center">
         
-        <div>
-            <img src="/img/logo.svg" alt=""></img>
-            <p className="text-sm">사내용 시스템</p>
-        </div>
+        <a href="/int">
+          <div>
+              <img src="/img/logo.svg" alt=""></img>
+              <p className="text-sm">사내용 시스템</p>
+          </div>
+        </a>
 
         {/* ✅ PC 메뉴 */}
         <div className="hidden md:flex space-x-6 relative">
