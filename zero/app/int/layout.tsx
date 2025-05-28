@@ -8,10 +8,11 @@ import { supabase } from '@/lib/supabase';
 
 // ✅ 메뉴 데이터 (각 메뉴마다 다른 세부 항목을 설정 가능)
 const menuData: { [key: string]: string[] } = {
-  "정보": ["내 정보", "공용 계정", "좌석 정보", "홈페이지 피드백", "가이드라인"],
-  "커뮤니티": ["공지사항", "정보 공유", "동호회 게시판", "건의사항"],
-  "기능": ["워크 플로우", "출퇴근 관리", "초대장"],
-  "관리": ["자산관리", "계정관리", "멤버관리"],
+  "정보": ["공용 계정", "좌석 정보", "가이드라인", "데이터센터"],
+  // "정보": ["내 정보", "공용 계정", "좌석 정보", "홈페이지 피드백", "가이드라인"],
+  // "커뮤니티": ["공지사항", "정보 공유", "동호회 게시판", "건의사항"],
+  // "기능": ["워크 플로우", "출퇴근 관리", "초대장"],
+  // "관리": ["자산관리", "계정관리", "멤버관리"],
   "사단법인 넥스트": ["홈페이지", "제로바 블로그"],
 };
 
@@ -191,6 +192,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <main className="p-6">
             {children}
         </main>
+
+        <div className="h-[250px] mt-30 relative">
+
+          <div className="flex justify-between text-black m-5 text-xs">
+            <div>
+              <div className="flex items-center gap-4 mr-5 pt-5 pb-2">
+                <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
+              
+                <p className="font-bold">NEXT group</p>
+                <p>서울 강남구 봉은사로 213</p>
+                <p>센트럴타워 8-9층</p>
+              </div> 
+              
+              <p className="text-[#3d6d69]">Find the NEXT, envision the realization of a sustainable net-zero economic system</p>
+
+            </div>
+          </div>
+            
+        </div>
     </div>
   );
 }
