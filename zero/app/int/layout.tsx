@@ -18,8 +18,9 @@ const menuData: { [key: string]: string[] } = {
 
 const menuLinks: { [key: string]: string } = {
     "공용 계정": "/int/info/account",
-    "홈페이지 피드백": "/int/info/feedback",
+    // "홈페이지 피드백": "/int/info/feedback",
     "좌석 정보": "/int/info/desk",
+    "가이드라인": "/int/info/guideline",
 
     "홈페이지": "https://nextgroup.or.kr/",
     "제로바 블로그": "../../platform",
@@ -199,7 +200,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <div className="flex justify-between text-black m-5 text-xs">
             <div>
-              <div className="flex items-center gap-4 mr-5 pt-5 pb-2">
+              <div className="flex items-center gap-4 mr-5 pt-5 pb-2 text-sm sm:text-base">
                 <a href="https://nextgroup.or.kr/" target="_black" className="hover:opacity-75"><img src="/blog/top_link1.png" className="w-6"/></a>
               
                 <p className="font-bold">NEXT group</p>
