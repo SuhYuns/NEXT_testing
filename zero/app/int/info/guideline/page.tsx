@@ -38,6 +38,8 @@ export default function GuidelinePage() {
   const [sortBy, setSortBy] = useState<'created_at' | 'title'>('created_at');
   const [ascending, setAscending] = useState<boolean>(false);
 
+  const [isManager, setIsManager] = useState(false);
+
   /* --- 파라미터 의존 쿼리 --- */
   const load = async () => {
     const from = (page - 1) * pageSize;
@@ -75,8 +77,26 @@ export default function GuidelinePage() {
     }
   };
 
+  useEffect(() => {
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // 내 profiles
+      const { data: myProfile } = await supabase
+        .from('profiles')
+        .select('ismanager')
+        .eq('id', user.id)
+        .single();
+      setIsManager(myProfile?.ismanager ?? false);
+    }
+
+    init();
+  }, []);
+
   // 로드 트리거: page, category, keyword, sortBy, ascending
   useEffect(() => {
+    
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, category, keyword, sortBy, ascending]);
@@ -99,12 +119,16 @@ export default function GuidelinePage() {
       {/* 헤더 */}
       <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold">가이드라인</h1>
+        
+
+        {isManager && (
         <button
-          onClick={() => router.push('./guideline/write')} 
-          className="px-4 py-2 bg-[#59bd7b] text-white rounded whitespace-nowrap"
-        >
-          작성하기
-        </button>
+        onClick={() => router.push('./guideline/write')} 
+        className="px-4 py-2 bg-[#59bd7b] text-white rounded whitespace-nowrap"
+      >
+        작성하기
+      </button>
+      )}
       </div>
 
       {/* 필터 & 검색 */}
@@ -138,12 +162,10 @@ export default function GuidelinePage() {
               <th className="p-3 cursor-pointer" onClick={() => toggleSort('title')}>
                 제목 {sortBy === 'title' && (ascending ? '▲' : '▼')}
               </th>
-              <th className="p-3">카테고리</th>
               <th className="p-3 cursor-pointer" onClick={() => toggleSort('created_at')}>
                 작성일 {sortBy === 'created_at' && (ascending ? '▲' : '▼')}
               </th>
               <th className="p-3">작성자</th>
-              <th className="p-3">사용</th>
             </tr>
           </thead>
           <tbody>
@@ -155,12 +177,11 @@ export default function GuidelinePage() {
             {rows.map(row => (
               <tr key={row.id} className="border-t last:border-b hover:bg-gray-50">
                 <td className="p-3 whitespace-nowrap">
+                  {"[" + row.category + "] "} 
                   {row.title}
                 </td>
-                <td className="p-3 whitespace-nowrap">{row.category ?? '-'}</td>
                 <td className="p-3 whitespace-nowrap">{new Date(row.created_at).toLocaleDateString('ko-KR')}</td>
                 <td className="p-3 whitespace-nowrap">{row.writer?.name ?? '알 수 없음'}</td>
-                <td className="p-3 whitespace-nowrap text-center">{row.is_used ? '✔︎' : ''}</td>
               </tr>
             ))}
           </tbody>
