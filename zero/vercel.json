@@ -3,6 +3,26 @@
       "env": {
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
-    }
+    },
+
+    "routes": [
+      {
+        "src": "/",
+        "dest": "/app/platform",
+        "status": 308,
+        "has": [
+          { "type": "host", "key": "host", "value": "nextzerobar\\.org" },
+          { "type": "host", "key": "host", "value": "www\\.nextzerobar\\.org" }
+        ]
+      },
+      {
+        "src": "/",
+        "dest": "/app/int",
+        "status": 308,
+        "has": [
+          { "type": "host", "key": "host", "value": "nextgroup\\.vercel\\.app" }
+        ]
+      }
+    ]
   }
   
