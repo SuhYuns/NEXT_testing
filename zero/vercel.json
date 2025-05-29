@@ -1,28 +1,27 @@
 {
-    "build": {
-      "env": {
-        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
-      }
-    },
+  "build": {
+    "env": {
+      "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+    }
+  },
 
-    "routes": [
-      {
-        "src": "/",
-        "dest": "/app/platform",
-        "status": 308,
-        "has": [
-          { "type": "host", "key": "host", "value": "nextzerobar\\.org" },
-          { "type": "host", "key": "host", "value": "www\\.nextzerobar\\.org" }
-        ]
-      },
-      {
-        "src": "/",
-        "dest": "/app/int",
-        "status": 308,
-        "has": [
-          { "type": "host", "key": "host", "value": "nextgroup\\.vercel\\.app" }
-        ]
-      }
-    ]
-  }
-  
+  "routes": [
+    {
+      "src": "/",
+      "has": [
+        { "type": "host", "value": "nextzerobar\\.org" },
+        { "type": "host", "value": "www\\.nextzerobar\\.org" }
+      ],
+      "dest": "/app/platform",
+      "status": 308
+    },
+    {
+      "src": "/",
+      "has": [
+        { "type": "host", "value": "nextgroup\\.vercel\\.app" }
+      ],
+      "dest": "/app/int",
+      "status": 308
+    }
+  ]
+}
