@@ -18,6 +18,7 @@ interface CategoryOption {
 export default function GuidelineWritePage() {
   /* ──────────── 상태 ──────────── */
   const [title, setTitle]       = useState('');
+  const [writer, setWriter]       = useState('');
   const [category, setCategory] = useState('기타');
   const [isUsed, setIsUsed]     = useState(true);
   const [content, setContent]   = useState('');
@@ -25,9 +26,10 @@ export default function GuidelineWritePage() {
 
   /* 카테고리 옵션 (필요 시 동적 로드 가능) */
   const categories: CategoryOption[] = [
-    { value: '정책',   label: '정책'   },
-    { value: '디자인', label: '디자인' },
-    { value: '개발',   label: '개발'   },
+    { value: '필수',   label: '필수'   },
+    { value: '사무', label: '사무' },
+    { value: '연구',   label: '연구'   },
+    { value: 'IT',   label: 'IT'   },
     { value: '기타',   label: '기타'   }
   ];
 
@@ -48,20 +50,20 @@ export default function GuidelineWritePage() {
       if (authErr || !user) throw new Error('로그인 정보가 없습니다.');
   
       /* ── ① user_meta → name 이 들어있다면 그걸 사용 ───────────────── */
-      let writerName: string | null =
-        (user.user_metadata?.name as string | undefined) ??
-        (user.user_metadata?.full_name as string | undefined) ??
-        null;
+      // let writerName: string | null =
+      //   (user.user_metadata?.name as string | undefined) ??
+      //   (user.user_metadata?.full_name as string | undefined) ??
+      //   null;
   
-      /* ── ② profiles 테이블에 이름이 있다면 거기로 대체(옵션) ───────── */
-      if (!writerName) {
-        const { data: profile } = await supabase
-          .from('profiles')          // ← 실제 프로필 테이블명
-          .select('name')
-          .eq('id', user.id)
-          .single();
-        writerName = profile?.name ?? user.email ?? '알 수 없음';
-      }
+      // /* ── ② profiles 테이블에 이름이 있다면 거기로 대체(옵션) ───────── */
+      // if (!writerName) {
+      //   const { data: profile } = await supabase
+      //     .from('profiles')          // ← 실제 프로필 테이블명
+      //     .select('name')
+      //     .eq('id', user.id)
+      //     .single();
+      //   writerName = profile?.name ?? user.email ?? '알 수 없음';
+      // }
   
       /* INSERT 시 writer 컬럼에 **이름**을 문자열로 저장 */
       const { error } = await supabase.from('guideline').insert({
@@ -69,7 +71,7 @@ export default function GuidelineWritePage() {
         category,
         is_used: isUsed,
         content,
-        writer: writerName,   // ← 수정!
+        writer,   // ← 수정!
       });
       if (error) throw error;
   
@@ -87,6 +89,8 @@ export default function GuidelineWritePage() {
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">가이드라인 작성</h1>
 
+      
+
       {/* 제목 */}
       <label className="block mb-2 font-bold">제목</label>
       <input
@@ -95,6 +99,15 @@ export default function GuidelineWritePage() {
         placeholder="제목을 입력하세요"
         value={title}
         onChange={e => setTitle(e.target.value)}
+      />
+
+      <label className="block mb-2 font-bold">작성자</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded mb-4"
+        placeholder="제목을 입력하세요"
+        value={writer}
+        onChange={e => setWriter(e.target.value)}
       />
 
       {/* 카테고리 */}

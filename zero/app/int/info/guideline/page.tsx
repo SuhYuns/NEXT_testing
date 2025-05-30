@@ -4,11 +4,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';  
+import Link from "next/link";
 
-interface Writer {
-  id: string;
-  name: string | null;
-}
 
 interface GuidelineRow {
   id: string;
@@ -16,7 +13,7 @@ interface GuidelineRow {
   content?: string; // content 는 목록에서 사용하지 않음 (상세 필요 시 추가 fetch)
   category: string | null;
   created_at: string;
-  writer: Writer | null;
+  writer: string | null;
   is_used: boolean;
 }
 
@@ -158,6 +155,7 @@ export default function GuidelinePage() {
       <div className="overflow-x-auto bg-white shadow rounded">
         <table className="min-w-full text-sm">
           <thead>
+          
             <tr className="bg-gray-100 text-left">
               <th className="p-3 cursor-pointer" onClick={() => toggleSort('title')}>
                 제목 {sortBy === 'title' && (ascending ? '▲' : '▼')}
@@ -175,14 +173,18 @@ export default function GuidelinePage() {
               </tr>
             )}
             {rows.map(row => (
-              <tr key={row.id} className="border-t last:border-b hover:bg-gray-50">
+              
+              <tr key={row.id} className="border-t last:border-b hover:bg-gray-50" onClick={() => router.push(`/int/info/guideline/view/${row.id}`)}>
+                
                 <td className="p-3 whitespace-nowrap">
                   {"[" + row.category + "] "} 
                   {row.title}
                 </td>
                 <td className="p-3 whitespace-nowrap">{new Date(row.created_at).toLocaleDateString('ko-KR')}</td>
-                <td className="p-3 whitespace-nowrap">{row.writer?.name ?? '알 수 없음'}</td>
+                <td className="p-3 whitespace-nowrap">{row.writer ?? '알 수 없음'}</td>
+                
               </tr>
+              
             ))}
           </tbody>
         </table>
