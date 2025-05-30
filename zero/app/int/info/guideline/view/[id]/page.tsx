@@ -212,9 +212,12 @@ export default function PostDetail() {
                 router.push(`/int/info/guideline/write/update/${post.id}`);
               }}
               className="
-                px-2 py-1 text-xs rounded
-                text-blue-600 hover:underline
-                focus:outline-none
+                group inline-flex items-center gap-1
+                w-fit
+                px-4 py-2 rounded-full
+                border border-gray-300 bg-white text-gray-700
+                hover:bg-[#59bd7b] hover:text-white hover:border-transparent
+                transition
               "
             >
               수정하기
