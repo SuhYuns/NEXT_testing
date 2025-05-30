@@ -9,11 +9,13 @@ import remarkBreaks from "remark-breaks"; // 줄바꿈 지원
 import Spinner from "@/component/Spinner";
 import { BackToListButton } from '@/component/BackToListButton';
 import { useRouter } from "next/navigation";
+import { supabase } from '@/lib/supabase';
 
 export default function PostDetail() {
   const { id } = useParams() as { id: string };
   const [post, setPost] = useState<any>(null);
   const router = useRouter();
+  const [isManager, setIsManager] = useState(false);
 
   useEffect(() => {
 
@@ -34,6 +36,23 @@ export default function PostDetail() {
 
       
   }, [id]);
+
+  useEffect(() => {
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // 내 profiles
+      const { data: myProfile } = await supabase
+        .from('profiles')
+        .select('ismanager')
+        .eq('id', user.id)
+        .single();
+      setIsManager(myProfile?.ismanager ?? false);
+    }
+
+    init();
+  }, []);
 
   if (!post) {
     return (
@@ -113,7 +132,12 @@ export default function PostDetail() {
       {/* ReactMarkdown + 커스텀 컴포넌트 */}
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
-        rehypePlugins={[rehypeRaw]} // ← 추가!!!
+        rehypePlugins={[
+          // HTML 허용은 유지하되, 코드블록 내부에서는 실행되지 않도록
+          [rehypeRaw, { passThrough: ["element", "text"] }],
+        ]}
+
+        
         components={{
 
           // 헤딩
@@ -180,6 +204,23 @@ export default function PostDetail() {
     </div>
     <div className="text-center">
         <BackToListButton></BackToListButton>
+        {
+          isManager && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // 행 클릭 방지
+                router.push(`/int/info/guideline/write/update/${post.id}`);
+              }}
+              className="
+                px-2 py-1 text-xs rounded
+                text-blue-600 hover:underline
+                focus:outline-none
+              "
+            >
+              수정하기
+            </button>
+        )
+        }
     </div>
     </div>
   );

@@ -142,11 +142,12 @@ export default function GuidelineWritePage() {
           height: '600px',
           buttonList: [
             ['undo', 'redo'],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['font', 'fontSize', 'formatBlock'],
-            ['fontColor', 'hiliteColor'],
-            ['align', 'horizontalRule', 'list', 'table'],
-            ['codeView']
+            ["font", "fontSize", "formatBlock"],     // 글꼴·크기
+            ["bold", "italic", "underline", "strike"],
+            ["fontColor", "hiliteColor"],
+            ["align", "horizontalRule", "list", "table"], // ← hr 대신 horizontalRule
+            ["link", "image", "video"],
+            ["codeView"],
           ],
           font: ['Pretendard', 'Noto Sans KR', 'Arial', 'Georgia'],
           fontSize: [12, 14, 16, 18, 20, 24, 28],

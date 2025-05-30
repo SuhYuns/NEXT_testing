@@ -48,7 +48,8 @@ export default function GuidelinePage() {
       .select(
         `id, title, category, created_at, is_used, writer`,
         { count: 'exact' }
-      );
+      )
+      .eq("is_used", true); 
 
     if (category !== 'all') base = base.eq('category', category);
     if (keyword.trim())      base = base.ilike('title', `%${keyword.trim()}%`);
