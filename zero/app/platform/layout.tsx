@@ -48,10 +48,10 @@ export default function RootLayout({
                 gtag('config', '${GA_ID}', { page_path: window.location.pathname });
               `}
             </Script>
-            
-            <Suspense fallback={null}>
-+              <PlatformAnalytics />
-+            </Suspense>
+
+            <Suspense fallback={null}>              
+              <PlatformAnalytics />
+            </Suspense>
           </>
         )}
 
