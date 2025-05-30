@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import CopyableEmail from '../../component/CopyableEmail';
 import PlatformAnalytics from './analytics'; 
 import Script from 'next/script';
+import { Suspense } from 'react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +48,10 @@ export default function RootLayout({
                 gtag('config', '${GA_ID}', { page_path: window.location.pathname });
               `}
             </Script>
-            <PlatformAnalytics />
+            
+            <Suspense fallback={null}>
++              <PlatformAnalytics />
++            </Suspense>
           </>
         )}
 
