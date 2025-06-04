@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ZERO ENERGY BAR BLOG",
   description: "사단법인 넥스트의 미디어 블로그",
+  verification: {
+    /** Google Search Console 코드 */
+    google: '64NLpMq-z11LM8d6cAQcBALLMNQJGVUD4gO_va1zcIg',
+  },
 };
 
 
