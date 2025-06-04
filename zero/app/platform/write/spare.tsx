@@ -17,6 +17,7 @@ export default function WritePost() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log("test");
     const formData = new FormData();
     formData.append("thumbnail", file);
 
