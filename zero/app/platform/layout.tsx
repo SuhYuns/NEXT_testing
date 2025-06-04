@@ -102,8 +102,7 @@ export default function RootLayout({
 
 
 
-        <div className="h-[250px] mt-20 relative">
-
+        <div className="h-[250px] mt-20 relative hidden md:block">
           <div className="flex justify-between text-white m-5 text-xs">
             <div>
               <div className="flex items-center gap-4 mr-5 pt-5 pb-5">
@@ -132,8 +131,45 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-            
         </div>
+
+
+        {/* mobile only footer */}
+        <footer className="h-[250px] mt-20 relative block md:hidden">
+          <div className="flex flex-col items-center justify-center h-full
+                          text-white text-xs text-center space-y-2">
+            
+            <div className="flex items-center justify-center gap-4 pt-5 pb-5">
+              <a href="https://nextgroup.or.kr/"              target="_blank" className="hover:opacity-75">
+                <img src="/blog/top_link1.png" className="w-6" alt="NEXT group" />
+              </a>
+              <a href="https://www.linkedin.com/company/next-group-korea/"
+                target="_blank" className="hover:opacity-75">
+                <img src="/blog/top_link2.png" className="w-6" alt="LinkedIn" />
+              </a>
+              <a href="https://t.me/NEXTGroup2050"            target="_blank" className="hover:opacity-75">
+                <img src="/blog/top_link3.png" className="w-6" alt="Telegram" />
+              </a>
+              <a href="https://www.youtube.com/@zeroenergybar" target="_blank" className="hover:opacity-75">
+                <img src="/blog/top_link4.png" className="w-6" alt="YouTube" />
+              </a>
+            </div>
+
+            <p>서울 강남구 봉은사로&nbsp;213&nbsp;센트럴타워&nbsp;8-9층</p>
+
+            <div>
+              <p>미디어 협업 질문 <CopyableEmail email="media@nextgroup.or.kr" /></p>
+            </div>
+            <div>
+              <p>기타 문의 <CopyableEmail email="contact@nextgroup.or.kr" /></p>
+            </div>
+
+            <p className="text-[#3d6d69] mt-5">
+              COPYRIGHT&nbsp;2025&nbsp;NEXT&nbsp;GROUP,&nbsp;ALL&nbsp;RIGHTS&nbsp;RESERVED
+            </p>
+          </div>
+        </footer>
+
         </div>
         
       </body>
