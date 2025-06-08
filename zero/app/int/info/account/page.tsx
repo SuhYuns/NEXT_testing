@@ -166,14 +166,8 @@ export default function AccountPage() {
       {isManager && (
         <>
           <button
-            onClick={() => setShowModal(true)}
-            className="mb-4 px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm mr-2"
-          >
-            계정 등록
-          </button>
-          <button
             // onClick={() => setShowModal(true)}
-            onClick={() => {}}
+            onClick={() => {location.href='account/list'}}
             className="mb-4 px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm"
           >
             전체 계정
