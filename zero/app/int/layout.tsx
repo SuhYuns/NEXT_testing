@@ -23,7 +23,7 @@ const menuLinks: { [key: string]: string } = {
     "가이드라인": "/int/info/guideline",
 
     "홈페이지": "https://nextgroup.or.kr/",
-    "제로바 블로그": "../../platform",
+    "제로바 블로그": "https://www.nextzerobar.org/",
   };
 
 // ✅ 개별 메뉴 아이템 컴포넌트

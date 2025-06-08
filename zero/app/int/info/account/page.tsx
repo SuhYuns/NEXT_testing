@@ -164,12 +164,22 @@ export default function AccountPage() {
       <h1 className="text-2xl font-bold mb-4">공용 계정 관리</h1>
 
       {isManager && (
-        <button
-          onClick={() => setShowModal(true)}
-          className="mb-4 px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm"
-        >
-          계정 등록
-        </button>
+        <>
+          <button
+            onClick={() => setShowModal(true)}
+            className="mb-4 px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm mr-2"
+          >
+            계정 등록
+          </button>
+          <button
+            // onClick={() => setShowModal(true)}
+            onClick={() => {}}
+            className="mb-4 px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm"
+          >
+            전체 계정
+          </button>
+        </>
+        
       )}
 
       <table className="w-full table-auto border-collapse">
