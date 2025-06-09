@@ -1,5 +1,6 @@
 'use client';
 
+import { profile } from 'console';
 import { useEffect } from 'react';
 
 export default function ProfilePage() {

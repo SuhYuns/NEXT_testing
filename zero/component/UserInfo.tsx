@@ -108,16 +108,40 @@ export default function UserInfo() {
   }
 
   return (
-    <div className="flex items-center justify-end p-3 pr-10 bg-white shadow">
-      <span className="mr-4">
-        👋 안녕하세요, <strong>{profile.name}</strong>님
-      </span>
-      <button
-        onClick={handleLogout}
-        className="p-1 px-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-      >
-        logout
-      </button>
-    </div>
+    <>
+      <div className="flex items-center justify-end p-3 pr-10 bg-white shadow">
+        <span className="mr-4">
+          👋 안녕하세요, <strong>{profile.name}</strong>님
+        </span>
+        <button
+          onClick={handleLogout}
+          className="p-1 px-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+        >
+          logout
+        </button>
+      </div>
+      {
+        profile.ismanager ? (
+          <div className="flex justify-end items-center gap-4 bg-white p-4 pr-10 rounded-md shadow-sm ">
+            <p>관리자 콘솔</p>
+            <a href="/int/info/auth" className="bg-white hover:bg-[#e8f5e9] text-gray-800 font-medium py-2 px-4 rounded shadow-sm border border-gray-200">
+              유저 정보
+            </a>
+            <a href="/int/info/asset" className="bg-white hover:bg-[#e8f5e9] text-gray-800 font-medium py-2 px-4 rounded shadow-sm border border-gray-200">
+              자산 관리
+            </a>
+            <a href="/int/info/account/list" className="bg-white hover:bg-[#e8f5e9] text-gray-800 font-medium py-2 px-4 rounded shadow-sm border border-gray-200">
+              계정 관리
+            </a>
+            <a href="/int/info/desk/manage" className="bg-white hover:bg-[#e8f5e9] text-gray-800 font-medium py-2 px-4 rounded shadow-sm border border-gray-200">
+              좌석 관리
+            </a>
+          </div>
+
+        ) : null
+      }
+      
+    
+    </>
   )
 }
