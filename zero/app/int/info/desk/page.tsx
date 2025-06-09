@@ -271,8 +271,9 @@ export default function DeskPage() {
               seat.profiles_imm.length > 0 &&
               seat.profiles_imm[0].imm_seat_until
             ) {
-              const until = new Date(seat.profiles_imm[0].imm_seat_until);
-              const minutesLeft = Math.floor((until.getTime() - Date.now()) / 60000);
+              const until = new Date(seat.profiles_imm[0].imm_seat_until).getTime();
+              const nowUTC = new Date().getTime() + new Date().getTimezoneOffset() * 60000;
+              const minutesLeft = Math.floor((until - nowUTC) / 60000);
               timeLeftText = minutesLeft > 0 ? `(${minutesLeft}분 남음)` : '(만료됨)';
             }
 
@@ -378,7 +379,7 @@ export default function DeskPage() {
                   openAlert();
                   return
                 } 
-                if (profile?.current_seat) {
+                if (profile?.imm_seat) {
                   setMessage(["이미 사용 중인 좌석이 있습니다.", "자신의 좌석을 사용해 주세요", "확인"])
                   // alert(profile.current_seat)
                   openAlert();
@@ -386,7 +387,7 @@ export default function DeskPage() {
                 }
                 if (
                   (!selectedSeat.profiles || selectedSeat.profiles.length === 0) &&
-                  !profile?.current_seat
+                  !profile?.imm_seat
                 ) {
                   handleReserve()
                   window.location.reload();
