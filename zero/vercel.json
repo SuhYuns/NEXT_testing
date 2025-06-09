@@ -7,7 +7,7 @@
   "crons": [
     {
       "path": "/api/clear-expired-seats",
-      "schedule": "*/5 * * * *" 
+      "schedule": "0 3 * * *"
     }
   ]
 }
