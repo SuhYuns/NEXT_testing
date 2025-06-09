@@ -3,6 +3,12 @@
       "env": {
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
+    },
+    "crons": [
+    {
+      "path": "/api/clear-expired-seats",
+      "schedule": "*/5 * * * *" 
     }
+  ]
   }
   

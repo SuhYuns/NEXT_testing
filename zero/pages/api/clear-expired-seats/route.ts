@@ -1,13 +1,14 @@
-// /pages/api/clear-expired-seats.ts
-import { NextApiRequest, NextApiResponse } from 'next'
+// app/api/clear-expired-seats/route.ts
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// 서버 전용 Supabase 클라이언트
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!  // 서비스 키는 꼭 server-side에서만 사용!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function POST() {
   const nowIso = new Date().toISOString()
 
   const { error } = await supabase
@@ -18,8 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (error) {
     console.error('초기화 실패:', error.message)
-    return res.status(500).json({ error: error.message })
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return res.status(200).json({ message: '만료된 자율석 초기화 완료' })
+  return NextResponse.json({ message: '만료된 자율석 초기화 완료' }, { status: 200 })
 }
