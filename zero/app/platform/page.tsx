@@ -119,6 +119,17 @@ export default function BoardPage() {
 
   return (
     <div className="p-4">
+      <div
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      >
+        제로에너지바 블로그는 에너지, 산업, 정책, 과학 등 지속가능성과 관련된 주제를 다루는 미디어 콘텐츠 플랫폼입니다.  
+        사단법인 넥스트(NEXT group)의 연구자 및 전문가들이 참여하고 있으며, 기후 위기 해결을 위한 실천적 지식 확산을 목표로 합니다.
+      </div>
 
       {/* 모바일에서만 보이는 필터 토글 버튼 */}
       <button
