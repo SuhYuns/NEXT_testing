@@ -32,6 +32,30 @@ export default function PostDetail() {
         setPrev(prev_id);
         setNext(next_id);
         document.title = 'ZERO ENERGY BAR | ' + post.title.toString();
+        
+        const descMeta = document.querySelector("meta[name='description']");
+        if (descMeta) {
+          descMeta.setAttribute("content", post.overview || post.content?.replace(/<[^>]+>/g, "").slice(0, 80));
+        } else {
+          const meta = document.createElement("meta");
+          meta.name = "description";
+          meta.content = post.overview || post.content?.replace(/<[^>]+>/g, "").slice(0, 80);
+          document.head.appendChild(meta);
+        }
+
+        // ✅ <meta name="keywords">
+        const keywords = post.keyword?.join(", ");
+        if (keywords) {
+          const keywordMeta = document.querySelector("meta[name='keywords']");
+          if (keywordMeta) {
+            keywordMeta.setAttribute("content", keywords);
+          } else {
+            const meta = document.createElement("meta");
+            meta.name = "keywords";
+            meta.content = keywords;
+            document.head.appendChild(meta);
+          }
+        }
       })
       .catch(console.error);
 

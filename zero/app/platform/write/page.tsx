@@ -17,6 +17,9 @@ export default function WritePost() {
   const [uploadingThumb, setUploadingThumb] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const [description, setDescription] = useState("");
+  const [keywords, setKeywords] = useState("");
+
   // ───────────────── 이미지·썸네일 업로드 공통 함수 ────────────────
   const uploadToApi = async (file: File, folder: string): Promise<string> => {
     const form = new FormData();
@@ -63,7 +66,9 @@ export default function WritePost() {
           category,
           topics,
           thumbnail: thumbnailUrl,
-          content,                // HTML 그대로 저장
+          content,
+          overview: description,
+          keyword: keywords.split(",").map(k => k.trim()).filter(k => k), // string[]로 변환
         }),
       });
       const data = await res.json();
@@ -121,6 +126,25 @@ export default function WritePost() {
         <option value="Science" className="text-black">Science</option>
         <option value="Others" className="text-black">Others</option>
       </select>
+
+      <label className="block mb-2 font-bold">Description</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded mb-4"
+        placeholder="요약 설명을 입력하세요"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+
+      {/* ───── 키워드 ───── */}
+      <label className="block mb-2 font-bold">Keywords (쉼표로 구분)</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded mb-4"
+        placeholder="예: 에너지, 탄소중립, 정책"
+        value={keywords}
+        onChange={(e) => setKeywords(e.target.value)}
+      />
 
       {/* ───── 썸네일 ───── */}
       <label className="block mb-2 font-bold">Thumbnail</label>

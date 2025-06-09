@@ -17,13 +17,14 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  const { id, title, category, topics, thumbnail, content, state, created_at } = req.body;
+  // const { id, title, category, topics, thumbnail, content, state, created_at } = req.body;
+  const { id, title, category, topics, thumbnail, content, state, created_at, overview, keyword } = req.body;
   if (!id) return res.status(400).json({ error: 'Missing post ID' });
 
   // 1) 원본 글 조회
   const { data: orig, error: getErr } = await supabaseAdmin
     .from('posts')
-    .select('title, category, topics, thumbnail, content, state, created_at')
+    .select('title, category, topics, thumbnail, content, state, created_at, overview, keyword')
     .eq('id', id)
     .single();
   if (getErr) {
@@ -36,6 +37,13 @@ export default async function handler(
   if (title && orig.title !== title)           changes.title = { before: orig.title, after: title };
   if (category && orig.category !== category) changes.category = { before: orig.category, after: category };
   if (topics && orig.topics !== topics)       changes.topics = { before: orig.topics, after: topics };
+  
+  if (overview && orig.overview !== overview)
+  changes.overview = { before: orig.overview, after: overview };
+
+  if (keyword && JSON.stringify(orig.keyword) !== JSON.stringify(keyword))
+  changes.keyword = { before: orig.keyword, after: keyword };
+
   if (thumbnail && orig.thumbnail !== thumbnail)
     changes.thumbnail = { before: orig.thumbnail, after: thumbnail };
   if (content && orig.content !== content)     {
@@ -77,6 +85,8 @@ export default async function handler(
   if (content)  updates.content   = content;
   if (typeof state === 'boolean') updates.state = state;
   if (created_at) updates.created_at = created_at;
+  if (overview) updates.overview = overview;
+  if (keyword)  updates.keyword  = keyword;
 
   const { error: updErr } = await supabaseAdmin
     .from('posts')

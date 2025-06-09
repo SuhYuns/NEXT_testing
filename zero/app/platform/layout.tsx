@@ -129,6 +129,7 @@ export default function RootLayout({
                 <p>미디어 협업 질문</p>
                 <CopyableEmail email="media@nextgroup.or.kr" />
               </div>
+              
               <div>
                 <p>기타 문의</p>
                 <CopyableEmail email="contact@nextgroup.or.kr" />

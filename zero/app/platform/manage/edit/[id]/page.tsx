@@ -21,6 +21,8 @@ export default function EditPostPage() {
   const [loading, setLoading] = useState(true);
   const [uploadingThumb, setUploadingThumb] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [description, setDescription] = useState("");
+  const [keywords, setKeywords] = useState("");
 
   /* ───────── 초기 데이터 로드 ───────── */
   useEffect(() => {
@@ -33,6 +35,8 @@ export default function EditPostPage() {
       setTopics(post.topics);
       setThumbnailUrl(post.thumbnail);
       setContent(post.content || "");
+      setDescription(post.overview || "");           // ✅ 설명
+      setKeywords(post.keyword?.join(", ") || "");   // ✅ 키워드
       setLoading(false);
     })();
   }, [id]);
@@ -83,6 +87,8 @@ export default function EditPostPage() {
           topics,
           thumbnail: thumbnailUrl,
           content,
+          overview: description,
+          keyword: keywords.split(",").map(k => k.trim()).filter(k => k),
         }),
       });
       const json = await res.json();
@@ -141,6 +147,25 @@ export default function EditPostPage() {
         <option value="Science" className="text-black">Science</option>
         <option value="Others" className="text-black">Others</option>
       </select>
+
+      <label className="block mb-2 font-bold">Description</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded mb-4"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="예: 이 글은 XX에 대한 설명입니다."
+      />
+
+      {/* 키워드 (쉼표로 구분) */}
+      <label className="block mb-2 font-bold">Keywords (쉼표로 구분)</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded mb-4"
+        value={keywords}
+        onChange={(e) => setKeywords(e.target.value)}
+        placeholder="예: 에너지, 탄소중립, 제로에너지"
+      />
 
       {/* 썸네일 */}
       <label className="block mb-2 font-bold">Thumbnail</label>

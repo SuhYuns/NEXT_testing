@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Spinner from "@/component/Spinner";
 
+
 // 토글 함수 (체크박스)
 function toggleSelection(
   setList: React.Dispatch<React.SetStateAction<string[]>>,
