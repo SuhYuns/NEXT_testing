@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase';
 // ✅ 메뉴 데이터 (각 메뉴마다 다른 세부 항목을 설정 가능)
 const menuData: { [key: string]: string[] } = {
   "정보": ["공용 계정", "좌석 정보", "가이드라인", "데이터센터"],
-  // "정보": ["내 정보", "공용 계정", "좌석 정보", "홈페이지 피드백", "가이드라인"],
+  "관리자 페이지": ["유저 정보", "자산 관리", "계정 관리", "좌석 관리"],
   // "커뮤니티": ["공지사항", "정보 공유", "동호회 게시판", "건의사항"],
   // "기능": ["워크 플로우", "출퇴근 관리", "초대장"],
   // "관리": ["자산관리", "계정관리", "멤버관리"],
@@ -21,7 +21,10 @@ const menuLinks: { [key: string]: string } = {
     // "홈페이지 피드백": "/int/info/feedback",
     "좌석 정보": "/int/info/desk",
     "가이드라인": "/int/info/guideline",
-
+    "유저 정보": "/int/info/auth",
+    "자산 관리": "/int/info/asset",
+    "계정 관리": "/int/info/account/list",
+    "좌석 관리": "/int/info/desk/manage",
     "홈페이지": "https://nextgroup.or.kr/",
     "제로바 블로그": "https://www.nextzerobar.org/",
   };
@@ -45,6 +48,12 @@ const MenuItem = ({
   const toggleDropdown = () => {
     setOpenDropdown(openDropdown === title ? null : title);
   };
+
+  console.log("user:", user);
+
+  if (title === "관리자 페이지" && !(user?.ismanager)) {
+    return null; // 렌더링 안함
+  }
 
   return (
     <div className="relative">
