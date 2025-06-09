@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ZERO ENERGY BAR BLOG",
-  description: "사단법인 넥스트의 미디어 블로그",
+  title: "제로에너지바 블로그",
+  description: "기후 에너지 싱크탱크 사단법인 넥스트(NEXT group)의 미디어팀 제로에너지바의 블로그",
+  keywords: "사단법인 넥스트, 넥스트, 기후, 에너지, 제로에너지바, 싱크탱크, NEXT group",
   verification: {
-    /** Google Search Console 코드 */
     google: '64NLpMq-z11LM8d6cAQcBALLMNQJGVUD4gO_va1zcIg',
   },
 };
@@ -129,7 +129,7 @@ export default function RootLayout({
                 <p>미디어 협업 질문</p>
                 <CopyableEmail email="media@nextgroup.or.kr" />
               </div>
-              
+
               <div>
                 <p>기타 문의</p>
                 <CopyableEmail email="contact@nextgroup.or.kr" />
