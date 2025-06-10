@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import EditCheck from '@/component/EditCheck';
 import Modal from '@/component/Modal';
 import { useRouter } from 'next/navigation';
+import ManagerCheck from '@/component/ManagerCheck';
 
 // ───────────────── 타입 & 상수 ─────────────────
 interface AccountRow {
@@ -116,13 +117,14 @@ export default function AllAccountsPage() {
   /* ───────────────────────── JSX ───────────────────────── */
   return (
     <div className="p-6 max-w-7xl mx-auto">
+    <ManagerCheck>
       <h1 className="text-2xl font-bold mb-6">전체 계정 관리</h1>
 
       {/* 상단 검색 + 버튼 */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <input value={query} onChange={e => { setQuery(e.target.value); setPage(1); }} placeholder="사이트명을 입력하세요…" className="flex-1 border p-2 rounded" />
         <button onClick={() => { setShowCreate(true); loadProfiles(); }} className="px-4 py-2 bg-[#59bd7b] text-white rounded hover:shadow-sm">계정 등록</button>
-        <button onClick={() => router.back()} className="px-3 py-2 border rounded hover:bg-gray-50">← 돌아가기</button>
+        <button onClick={() => router.push('/int/info/account')} className="px-3 py-2 border rounded hover:bg-gray-50">← 돌아가기</button>
       </div>
 
       {/* 테이블 */}
@@ -175,6 +177,7 @@ export default function AllAccountsPage() {
 
       {/* 토스트 */}
       {toast && <EditCheck onClose={()=>setToast(false)} />}
+        </ManagerCheck>
     </div>
   );
 }

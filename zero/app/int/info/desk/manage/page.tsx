@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import ManagerCheck from '@/component/ManagerCheck';
 
 interface Profile {
   id: string;
@@ -65,6 +66,7 @@ export default function ManageSeatsPage() {
 
   return (
     <div className="p-6">
+      <ManagerCheck>
       <h1 className="text-2xl font-bold mb-4">좌석 현황 관리</h1>
       <button onClick={() => router.push('/int/info/desk')} className="px-3 py-2 border rounded hover:bg-gray-50 mr-2">← 돌아가기</button>
       <input
@@ -143,6 +145,7 @@ export default function ManageSeatsPage() {
           })}
         </tbody>
       </table>
+      </ManagerCheck>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/component/Modal';
 import EditCheck from '@/component/EditCheck';
 import AssetInfo from '@/component/AssetInfo';
+import ManagerCheck from '@/component/ManagerCheck';
 
 // ───────────────── 타입 & 상수 ─────────────────
 interface AssetRow {
@@ -97,6 +98,7 @@ export default function AssetsPage() {
   /* ───── JSX ───── */
   return (
     <div className="p-6 max-w-7xl mx-auto">
+    <ManagerCheck>
       <h1 className="text-2xl font-bold mb-6">자산 목록</h1>
 
       {/* 검색 & 버튼 */}
@@ -180,6 +182,7 @@ export default function AssetsPage() {
 
       {/* Toast */}
       {toast && <EditCheck onClose={() => setToast(false)} />}
+      </ManagerCheck>
     </div>
   );
 }

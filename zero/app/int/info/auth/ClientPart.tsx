@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import Modal from '@/component/Modal';
 import EditCheck from '@/component/EditCheck';
 import type { User } from '@supabase/supabase-js';
+import ManagerCheck from '@/component/ManagerCheck';
 
 /* ───────── 타입 ───────── */
 interface ProfileRow {
@@ -174,6 +175,7 @@ export default function ClientPart({ authList, profiles }: Props) {
   /* ───────── JSX ───────── */
   return (
     <div className="p-6 max-w-7xl mx-auto">
+    <ManagerCheck>
       <h1 className="text-2xl font-bold mb-6">유저 / 프로필 관리</h1>
 
       {/* 검색 + 새 유저 버튼 */}
@@ -426,6 +428,7 @@ export default function ClientPart({ authList, profiles }: Props) {
       )}
 
       {toast && <EditCheck onClose={() => setToast(false)} />}
+      </ManagerCheck>
     </div>
   );
 }
