@@ -400,7 +400,7 @@ export default function DeskPage() {
 
               }
                 
-                {profile?.current_seat == selectedSeat.id && 
+                {profile?.imm_seat == selectedSeat.id && 
                   <button 
                     className='px-4 py-2 rounded text-white mr-2 bg-red-500 hover:bg-red-600'
                     onClick={async () => {
@@ -409,7 +409,8 @@ export default function DeskPage() {
                       const res = await fetch('/api/seats/cancel', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include', // 쿠키 필수
+                        credentials: 'include',
+                        body: JSON.stringify({ userId: profile?.id }),
                       });
                   
                       const result = await res.json();
